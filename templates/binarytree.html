@@ -1,0 +1,431 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Tree</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation {
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 55vh;
+        margin: 0;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+  }
+  .explaination p,li{
+    font-size: 17px;
+  }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  #canvas{
+    width: 100vh;
+    padding-top: 10px;
+  }
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  #canvas{
+    width: 85vh;
+  }
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  #canvas{
+    width: 59vh;
+  }
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  #canvas{
+    width: 45vh;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    margin-top: 0px;
+  }
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+<br>
+<br>
+<br>
+<div class="animation">
+    <canvas id="canvas" width="650" height="400"></canvas>
+</div>
+<div class="explaination">
+  <h2>What is an Binary Tree:</h2>
+  <p>A binary tree is a hierarchical data structure composed of nodes, where each node has at most two children, 
+    referred to as the left child and the right child. The topmost node of the tree is called the root node.
+  </p>
+  <h2>Types of Binary Tree:</h2><p>
+    <li>Full Binary Tree: A binary tree where each node has either 0 or 2 children.</li>
+    <li>Complete Binary Tree: A binary tree in which every level, except possibly the last, is completely filled, and all nodes are as far left as possible.</li>
+    <li>Perfect Binary Tree: A binary tree in which all internal nodes have exactly two children, and all leaves are at the same level.</li>
+    <li>Balanced Binary Tree: A binary tree in which the height of the left and right subtrees of any node differ by at most one.</li></p>
+  
+  <h2>Operation of Binary Tree:</h2><p>
+    <li>Traversal: Binary trees can be traversed in different ways, including in-order, pre-order, and post-order traversal.</li>
+    <li>Search: Searching for a specific value in a binary tree can be done efficiently using algorithms like depth-first search (DFS) or breadth-first search (BFS).</li>
+    <li>Insertion: Adding a new node to a binary tree involves finding the appropriate position based on certain rules (e.g., maintaining the binary search tree property in the case of a binary search tree).</li>
+    <li>Deletion: Removing a node from a binary tree requires handling cases where the node has zero, one, or two children.</li></p>
+  <h2>Applications of Binary Tree:</h2><p>
+    <li>Binary Search Trees (BST): Binary search trees are commonly used for efficient searching, insertion, and deletion operations.</li>
+    <li>Expression Trees: Binary trees can represent mathematical expressions, where each node corresponds to an operator or operand.</li>
+    <li>File System Representation: Binary trees can represent hierarchical file systems, with directories as internal nodes and files as leaves.</li>
+    <li>Binary Heaps: Binary trees are used to implement priority queues and heap data structures.</li></p>
+  <h2>Advantage of Binary Tree:</h2><p>
+    <li>Efficient Searching: Binary search trees offer efficient searching with average time complexity of O(log n) for search, insertion, and deletion operations.</li>
+    <li>Space Efficiency: Binary trees typically use memory efficiently, especially when compared to other hierarchical structures like linked lists.</li></p>
+  <h2>Disadvantage of  Binary Tree:</h2><p>
+    <li>Unbalanced Trees: If not properly balanced, binary trees can degenerate into linked lists, leading to degraded performance for search operations.</li>
+    <li>Complexity: Implementing algorithms for insertion, deletion, and rebalancing of binary trees can be complex and error-prone, especially for self-balancing tree variants.</li></p>
+</div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{dataset.code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{dataset.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{dataset.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+    //animation start
+    
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    class TreeNode {
+        constructor(value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    function drawNode(x, y, value, color) {
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#000';
+        ctx.fillText(value, x - 6, y + 6);
+    }
+
+    function drawEdge(startX, startY, endX, endY, color) {
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    function drawTree(root, x, y, depth) {
+        if (!root) return;
+
+        const nodeX = x;
+        const nodeY = y;
+        const offsetX = 150;
+        const offsetY = 80;
+
+        const color = depth === 'insertion' ? '#0492C2' : depth === 'deletion' ? '#82EEFD' : '#088f8f';
+
+        drawNode(nodeX, nodeY, root.value, color);
+
+        if (root.left) {
+            const childX = x - offsetX;
+            const childY = y + offsetY;
+            drawEdge(nodeX, nodeY, childX, childY, color);
+            drawTree(root.left, childX, childY, depth);
+        }
+
+        if (root.right) {
+            const childX = x + offsetX;
+            const childY = y + offsetY;
+            drawEdge(nodeX, nodeY, childX, childY, color);
+            drawTree(root.right, childX, childY, depth);
+        }
+    }
+
+    function insertNode(root, value) {
+        if (!root) return new TreeNode(value);
+
+        if (value < root.value) {
+            root.left = insertNode(root.left, value);
+        } else if (value > root.value) {
+            root.right = insertNode(root.right, value);
+        }
+
+        return root;
+    }
+
+    function deleteNode(root, value) {
+        if (!root) return root;
+
+        if (value < root.value) {
+            root.left = deleteNode(root.left, value);
+        } else if (value > root.value) {
+            root.right = deleteNode(root.right, value);
+        } else {
+            if (!root.left) return root.right;
+            else if (!root.right) return root.left;
+
+            root.value = minValue(root.right);
+            root.right = deleteNode(root.right, root.value);
+        }
+
+        return root;
+    }
+
+    function minValue(node) {
+        let min = node.value;
+        while (node.left) {
+            min = node.left.value;
+            node = node.left;
+        }
+        return min;
+    }
+
+    function searchNode(root, value) {
+        if (!root || root.value === value) return root;
+
+        if (value < root.value) {
+            return searchNode(root.left, value);
+        } else {
+            return searchNode(root.right, value);
+        }
+    }
+
+    // Create an empty binary search tree
+    let bstRoot = null;
+
+    // Example operations (insertion, deletion, searching)
+    bstRoot = insertNode(bstRoot, 50);
+    bstRoot = insertNode(bstRoot, 30);
+    bstRoot = insertNode(bstRoot, 70);
+    bstRoot = insertNode(bstRoot, 20);
+    bstRoot = insertNode(bstRoot, 40);
+    bstRoot = insertNode(bstRoot, 60);
+    bstRoot = insertNode(bstRoot, 80);
+
+    // Draw the initial tree
+    drawTree(bstRoot, canvas.width / 2, 50, '');
+
+    // Perform an operation (e.g., deletion)
+    setTimeout(function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawTree(bstRoot, canvas.width / 2, 50, 'deletion');
+        bstRoot = deleteNode(bstRoot, 30);
+    }, 2000);
+
+    // Perform another operation (e.g., insertion)
+    setTimeout(function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawTree(bstRoot, canvas.width / 2, 50, 'insertion');
+        bstRoot = insertNode(bstRoot, 35);
+    }, 4000);
+
+    // Perform another operation (e.g., searching)
+    setTimeout(function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawTree(bstRoot, canvas.width / 2, 50, 'searching');
+        const foundNode = searchNode(bstRoot, 40);
+        if (foundNode) {
+            drawNode(canvas.width / 2, 50, foundNode.value, '#9FE2BF'); // Orange color for the found node
+        }
+    }, 6000);
+    //animation ends
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+
+{% endblock %}

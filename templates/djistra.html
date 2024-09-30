@@ -1,0 +1,469 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Path finding visualization and Syntax Highlighting</title>
+  <!-- CSS for Path finding visualization -->
+  <link rel="stylesheet" href="index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@531&display=swap" rel="stylesheet">
+  <!-- CSS for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+  <style>
+    /* CSS for Path finding visualization */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f6ff;
+      font-family: "Roboto Slab", serif;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(10, 40px);
+      grid-template-rows: repeat(10, 40px);
+      grid-row-gap: 13px;
+      grid-column-gap: 13px;
+    }
+    .start {
+      width: 7em;
+      height: auto;
+      color: white;
+      border: 4px solid white;
+      font-size: 20px;
+      background-color: #f7977a;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .refresh {
+      width: 7em;
+      height: auto;
+      color: white;
+      border: 4px solid white;
+      font-size: 20px;
+      background-color: #f7977a;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    a {
+      color: #f7977a;
+    }
+    .node {
+      background-color: #8bcdcd;
+      text-align: center;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .explanation {
+      max-width: 55vh;
+    }
+    .tab button {
+      background-color: #ccc;
+    }
+    .tab button.active {
+      background-color: #f7977a;
+    }
+    .tabcontent {
+      display: none;
+      border: 1px solid #ccc;
+    }
+    @media only screen and (max-width: 600px) {
+      body {
+        margin-top: 1em;
+        font-size: small;
+      }
+      button {
+        border: 4px solid white;
+        font-size: 10px;
+        text-align: center;
+      }
+      .container {
+        display: grid;
+        grid-template-columns: repeat(10, 28px);
+        grid-template-rows: repeat(10, 28px);
+        grid-row-gap: 8px;
+        grid-column-gap: 8px;
+      }
+    }
+    /* CSS for Syntax Highlighting */
+    .code-container {
+      position: relative;
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: #f9f9f9;
+    }
+    .copy-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #050505;
+      border: none;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .copy-icon {
+      font-size: 18px;
+    }
+    .copy-message {
+      position: absolute;
+      top: 10px;
+      right: 50px;
+      display: none;
+      color: #040609;
+      animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+    .CodeMirror {
+      height: auto;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .btn{
+      align-items: center;
+      display: flex;
+    }
+    .explanation {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+      border-radius: 10px;
+    }
+    h2 {
+      color: #333;
+    }
+    p {
+      color: #666;
+    }
+    li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="btn">
+    <button class="start nav" onClick="start()">Start</button>
+    <button class="refresh nav" onClick="refresh();">Refresh</button>
+  </div>
+  <div class="container"></div>
+  
+  </div>
+  <br>
+  <br>
+  <br>
+  <div class="explanation">
+    <h2>What is Dijkstra's Algorithm?</h2>
+    <p>Dijkstra's Algorithm is a graph traversal algorithm that finds the shortest path between nodes in a graph with non-negative edge weights. It operates by iteratively selecting the node with the shortest distance from a set of unvisited nodes and updating the distances to its neighboring nodes accordingly.</p>
+  
+    <h2>Operations of Dijkstra's Algorithm:</h2>
+    <p>
+      <li>Initialize: Set the initial node's distance to zero and all other nodes' distances to infinity.</li>
+      <li>Selection: Select the unvisited node with the smallest known distance to the initial node.</li>
+      <li>Update: Update the distances to neighboring nodes if the selected node's distance plus the edge weight is shorter than the current distance.</li>
+      <li>Mark: Mark the selected node as visited.</li>
+      <li>Repeat: Repeat steps 2-4 until all nodes are visited or the destination node is reached.</li>
+    </p>
+  
+    <h2>Applications of Dijkstra's Algorithm:</h2>
+    <p>
+      <li>Shortest Path: It's used to find the shortest path between two nodes in a graph, such as in network routing or GPS navigation systems.</li>
+      <li>Resource Allocation: Dijkstra's Algorithm can be applied to allocate resources optimally, such as in traffic management or project scheduling.</li>
+      <li>Robotics: It's used in robotics for path planning to navigate robots efficiently in a given environment.</li>
+      <li>Network Optimization: Dijkstra's Algorithm is used in optimizing network flows, like in telecommunications or internet routing.</li>
+    </p>
+  
+    <h2>Advantages of Dijkstra's Algorithm:</h2>
+    <p>
+      <li>Optimality: Dijkstra's Algorithm guarantees finding the shortest path between nodes with non-negative edge weights.</li>
+      <li>Efficiency: It's efficient for finding the shortest path in graphs with relatively few nodes and edges.</li>
+      <li>Simple Implementation: The algorithm is relatively easy to understand and implement.</li>
+    </p>
+  
+    <h2>Disadvantages of Dijkstra's Algorithm:</h2>
+    <p>
+      <li>Non-Negative Weights: It only works correctly with graphs having non-negative edge weights.</li>
+      <li>Complexity: Dijkstra's Algorithm can be computationally expensive for large graphs.</li>
+      <li>Memory Usage: It requires additional memory to store distance values for each node, which can be significant for large graphs.</li>
+    </p>
+  </div>
+  
+  <div class="code-container">
+    <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+    <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+    <h2>Java Code</h2>
+    <textarea id="javaEditor" class="language-java">
+    <pre><code>{{algorithm.java_code}}</code></pre>
+  </textarea>
+  </div>
+  <div class="code-container">
+    <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+    <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+    <h2>Python Code</h2>
+    <textarea id="pythonEditor" class="language-python">
+      {{algorithm.python_code}}
+    </textarea>
+  </div>
+  <div class="code-container">
+    <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+    <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+    <h2>C++ Code</h2>
+    <textarea id="cppEditor" class="language-cpp">
+      {{algorithm.cpp_code}}
+    </textarea>
+  </div>
+  <!-- CodeMirror -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+  <script>
+    // Initialize CodeMirror instances
+    const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+      mode: 'text/x-java',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true
+    });
+
+    const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+      mode: 'python',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true
+    });
+
+    const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+      mode: 'text/x-c++src',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true
+    });
+
+    // Copy code to clipboard function
+    function copyCodeToClipboard(code, messageId) {
+      navigator.clipboard.writeText(code).then(() => {
+        const message = document.getElementById(messageId);
+        message.style.display = 'inline-block';
+        setTimeout(() => {
+          message.style.display = 'none';
+        }, 2000); // Hide the message after 2 seconds
+      });
+    }
+
+    // Copy Java code
+    function copyJavaCode() {
+      const javaCode = javaEditor.getValue();
+      copyCodeToClipboard(javaCode, 'javaCopyMessage');
+    }
+
+    // Copy Python code
+    function copyPythonCode() {
+      const pythonCode = pythonEditor.getValue();
+      copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+    }
+
+    // Copy C++ code
+    function copyCppCode() {
+      const cppCode = cppEditor.getValue();
+      copyCodeToClipboard(cppCode, 'cppCopyMessage');
+    }
+  </script>
+  <!-- Path Finding Visualization Script -->
+  <script>
+    // Returns a random number between min (inclusive) and max (exclusive)
+    function getRandomArbitrary(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+    
+    // Create a Node
+    function createNode(row, col, weight) {
+      var node = document.createElement("div");
+      node.setAttribute("class", "node");
+      node.setAttribute("row", row);
+      node.setAttribute("col", col);
+      node.setAttribute("cost", Number.POSITIVE_INFINITY);
+      node.setAttribute("parent", null);
+      node.setAttribute("weight", weight);
+      node.innerText = weight.toString();
+      return node;
+    }
+    
+    // Create Board and insert into HTML
+    function createBoard() {
+      var grid = document.querySelector(".container");
+      grid.innerHTML = "";
+      for (var row = 0; row < 10; row++) {
+        for (var col = 0; col < 10; col++) {
+          let weight = Math.round(getRandomArbitrary(1, 100));
+          let temp = createNode(row, col, weight);
+          let shadow = weight / 10;
+          temp.style.boxShadow = `${shadow}px ${shadow}px ${shadow}px rgba(0,0,0,0.8)`;
+          grid.appendChild(temp);
+        }
+      }
+      // Set start and end node
+      var startNode = document.querySelector("div[row='0'][col='0']");
+      var endNode = document.querySelector("div[row='9'][col='9']");
+      startNode.setAttribute("cost", 0);
+      startNode.innerHTML = "start";
+      endNode.innerHTML = "end";
+      startNode.style.boxShadow = `${0}px ${0}px ${0}px rgba(0,0,0,0.5)`;
+    }
+    
+    // Refresh Button
+    function refresh() {
+      var btn = document.querySelector(".start");
+      btn.style.visibility = "visible";
+      createBoard();
+    }
+    
+    // Check and update node
+    function checkNode(row, col, curr, checker, seen, counter) {
+      if (row >= 0 && col >= 0 && row <= 9 && col <= 9) {
+        var node = document.querySelector(`div[row="${row}"][col="${col}"]`);
+    
+        var cost = Math.min(
+          parseInt(curr.getAttribute("cost")) +
+            parseInt(node.getAttribute("weight")),
+          node.getAttribute("cost")
+        );
+        if (cost < node.getAttribute("cost")) {
+          node.setAttribute(
+            "parent",
+            curr.getAttribute("row") + "|" + curr.getAttribute("col")
+          );
+          node.setAttribute("cost", cost);
+        }
+        changeColor(node, counter, cost);
+        changeColor(curr, counter, false);
+        if (!seen.includes(node)) {
+          checker.push(node);
+        }
+        seen.push(node);
+        return node;
+      } else {
+        return false;
+      }
+    }
+    
+    // Animate the nodes
+    function changeColor(node, counter, cost) {
+      setTimeout(() => {
+        node.style.backgroundColor = "#e5edb7";
+        if (cost) {
+          node.innerHTML = cost;
+        }
+      }, counter * 100);
+      setTimeout(() => {
+        node.style.backgroundColor = "#f1c5c5";
+      }, counter * 100 + 100);
+    }
+    
+    // Start path-finding
+    function start() {
+      var startNode = document.querySelector("div[row='0'][col='0']");
+      var endNode = document.querySelector("div[row='9'][col='9']");
+      // Hide button
+      var btn = document.querySelector(".start");
+      var refreshBtn = document.querySelector(".refresh");
+      btn.style.visibility = "hidden";
+      refreshBtn.style.visibility = "hidden";
+      // Algo here
+      var seen = [startNode];
+      var checker = [startNode];
+      var counter = 1;
+      while (checker.length != 0) {
+        checker.sort(function (a, b) {
+          if (parseInt(a.getAttribute("cost")) < parseInt(b.getAttribute("cost"))) {
+            return 1;
+          }
+          if (parseInt(a.getAttribute("cost")) > parseInt(b.getAttribute("cost"))) {
+            return -1;
+          }
+          return 0;
+        });
+        let curr = checker.pop();
+        // Important to parse string to integer
+        let row = parseInt(curr.getAttribute("row"));
+        let col = parseInt(curr.getAttribute("col"));
+        // Check up down left right
+        let nextRow = row + 1;
+        let prevRow = row - 1;
+        let leftCol = col - 1;
+        let rightCol = col + 1;
+        let a = checkNode(nextRow, col, curr, checker, seen, counter);
+        let b = checkNode(prevRow, col, curr, checker, seen, counter);
+        let c = checkNode(row, leftCol, curr, checker, seen, counter);
+        let d = checkNode(row, rightCol, curr, checker, seen, counter);
+        counter++;
+      }
+    
+      // Draw out best route
+      setTimeout(() => {
+        startNode.style.backgroundColor = "#faf0af";
+        while (endNode.getAttribute("parent") != "null") {
+          endNode.style.backgroundColor = "#faf0af";
+          var coor = endNode.getAttribute("parent").split("|");
+          var prow = parseInt(coor[0]);
+          var pcol = parseInt(coor[1]);
+          endNode = document.querySelector(`div[row="${prow}"][col="${pcol}"]`);
+        }
+      }, counter * 100 + 100);
+      // Show refresh button again
+      setTimeout(() => {
+        refreshBtn.style.visibility = "visible";
+      }, counter * 100 + 100);
+    }
+    
+    // Algo Explanation tabs | Source https://www.w3schools.com/howto/howto_js_tabs.asp
+    function openTab(evt, id) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(id).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    // Initialize
+    window.onload = () => {
+      createBoard();
+      document.querySelectorAll("button")[2].click();
+    };
+  </script>
+  {% endblock %}

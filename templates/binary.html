@@ -1,0 +1,341 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Search Algorithm</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Added to align elements vertically */
+        height: 35vh;
+        margin: 0;
+    }
+    .circle {
+        width: 50px;
+        height: 50px;
+        background-color: #0492C2;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 10px;
+        border-radius: 50%; /* Added to make square elements into circles */
+    }
+    #squares {
+        display: flex; /* Display squares in a row */
+    }
+    #searchingFor {
+        margin-top: 20px;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+  }
+  .explaination p,li{
+    font-size: 17px;
+  }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <br>
+  <br>
+<div class="animation">
+    <div id="squares"></div>
+    <div id="searchingFor">Searching for: </div>
+</div>
+<div class="explaination">
+  <h2>What is Binary Seacrh Algorithm:</h2>
+  <p>Binary search is a searching algorithm used to find the position of a target value within a sorted array or 
+    list. It works by repeatedly dividing the search interval in half until the target value is found or the 
+    interval becomes empty.
+  </p>
+  <h2>Types of Binary Search Algorithm:</h2>
+  <p>There are primarily two types of binary search:
+    <li>Iterative Binary Search: This version of binary search uses a loop to divide the search interval iteratively until the target value is found or the interval becomes empty.</li>
+    <li>Recursive Binary Search: In this version, the search is performed recursively by dividing the array into halves until the target value is found or the interval becomes empty.</li>
+  </p>
+  <h2>Operation of Binary Search Algorithm:</h2><p>
+    <li>Initialize: Set the search interval to the entire array.</li>
+    <li>Divide: Calculate the middle index of the current interval.</li>
+    <li>Compare: Compare the middle element with the target value.</li>
+    <li>Adjust the Interval: If the middle element is equal to the target, the search is complete. If the middle element is greater than the target, search the left half of the interval. If it's less than the target, search the right half.</li>
+    <li>Repeat: Repeat steps 2-4 until the target is found or the interval is empty.</li></p>
+  <h2>Application of Binary Search Algorithm:</h2><p>
+    <li>Searching in Sorted Arrays: Binary search is used to quickly find elements in sorted arrays, making it efficient for tasks like dictionary lookups or finding specific entries in large datasets.</li>
+    <li>Finding Bounds or Thresholds: It can be used to find upper or lower bounds for a given value in a sorted array.</li>
+    <li>Finding Peaks or Valleys: Binary search can also be used to find peaks or valleys in functions or arrays.</li></p>
+  <h2>Adavntage of Binary Search Algorithm:</h2><p>
+    <li>Efficiency: Binary search has a time complexity of O(log n), making it highly efficient for large datasets.</li>
+    <li>Requires Sorted Data: Binary search requires the data to be sorted initially, but once sorted, it can quickly find elements.</li></p>
+  <h2>Disadvantage of Binary Search Algorithm:</h2><p>
+    <li>Requires Sorted Data: As mentioned, binary search requires the data to be sorted beforehand, which can be an additional preprocessing step.</li>
+    <li>Limited to Sorted Collections: Binary search is only applicable to sorted collections, so if the data is unsorted or frequently changing, binary search may not be suitable.</li></p>
+</div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+</textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+    //animation start
+    
+    async function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function binarySearch(arr, target) {
+        let low = 0;
+        let high = arr.length - 1;
+
+        while (low <= high) {
+            let mid = Math.floor((low + high) / 2);
+            updateDisplay(arr, mid); // Highlight the current square being checked
+            await sleep(1000); // Adjust the speed of animation (milliseconds)
+
+            if (arr[mid] === target) {
+                alert(`Element ${target} found at index ${mid}`);
+                return mid;
+            } else if (arr[mid] < target) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        alert(`Element ${target} not found in the array`);
+        return -1;
+    }
+
+    function createSquare(value, index) {
+        let square = document.createElement('div');
+        square.className = 'circle'; // Changed class name to 'circle'
+        square.textContent = value;
+        if (index === 0) {
+            square.style.backgroundColor = '#0492C2'; // Highlight the current square being checked
+        }
+        return square;
+    }
+
+    function updateDisplay(arr, currentIndex) {
+        const squaresContainer = document.getElementById('squares');
+        squaresContainer.innerHTML = '';
+        arr.forEach((value, index) => {
+            const square = createSquare(value, index);
+            squaresContainer.appendChild(square);
+        });
+        // Highlight the current square being checked
+        squaresContainer.children[currentIndex].style.backgroundColor = '#82EEFD';
+        squaresContainer.children[currentIndex].style.color = 'black';
+        // Update the text to display the number being searched for
+        document.getElementById('searchingFor').textContent = 'Searching for: ' + target;
+    }
+
+    // Initial sorted array for searching
+    let arr = [1, 3, 5, 7, 9, 11, 13, 15];
+    let target = 9; // Element to search for
+
+    // Start the animation
+    binarySearch(arr, target);
+    //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

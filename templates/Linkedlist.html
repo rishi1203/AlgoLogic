@@ -1,0 +1,315 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked List</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation{
+        text-align: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    /* CSS styles for the linked list container and items */
+    .linked-list {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+    .list-item {
+        width: 50px;
+        height: 50px;
+        background-color: hsl(var(--hue), 70%, 50%);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .button{
+      border: none;
+      border-radius: 5px;
+      background-color: #0492C2;
+      color:white;
+      padding: 10px;
+    }
+    .button:hover{
+      background-color: #82EEFD;
+      color: black;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+    
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <br>
+  <br>
+  <br>
+    <div class="animation">
+    <div class="linked-list">
+        <!-- Linked list items will be dynamically added here -->
+    </div>
+    <button onclick="addItem()" class="button">Add Item</button>
+    <button onclick="removeItem()" class="button">Remove Item</button>
+    </div>
+    <div class="explaination">
+      <h2>What is Linked List:</h2>
+        <p>A linked list is a linear data structure in which elements are stored in separate objects called nodes. 
+          Each node contains two parts: data and a reference (or pointer) to the next node in the sequence, forming a chain-like structure.
+        </p>
+      <h2>Types of Linked List:</h2>
+      <p>There are several types of linked lists, including:
+        <li>Singly Linked List: Each node has a reference to the next node in the sequence.</li>
+        <li>Doubly Linked List: Each node has references to both the next and previous nodes in the sequence.</li>
+        <li>Circular Linked List: In this type, the last node points back to the first node, forming a circular structure.</li></p>
+      <h2>Operation of Linked List:</h2><p>
+        <li>Insertion: Adding a new node to the list at a specified position.</li>
+        <li>Deletion: Removing a node from the list.</li>
+        <li>Traversal: Visiting each node in the list in a specific order.</li>
+        <li>Search: Finding a specific value or node in the list.</li>
+        <li>Concatenation: Combining two or more linked lists into a single linked list.</li></p>
+      <h2>Application of Linked List:</h2><p>
+        <li>Dynamic Memory Allocation: Linked lists are used in dynamic memory allocation, where memory can be allocated and deallocated as needed.</li>
+        <li>Implementing Data Structures: Linked lists are used to implement other data structures like stacks, queues, and hash tables.</li>
+        <li>Text Editors: Text editors often use linked lists to represent text buffers, where each node represents a line of text.</li>
+        <li>Undo Functionality: Linked lists can be used to implement undo functionality in applications by storing previous states.</li></p>
+      <h2>Advnatage of Linked List:</h2><p>
+        <li>Dynamic Size: Linked lists can dynamically grow and shrink in size, making them flexible for managing memory.</li>
+        <li>Efficient Insertion and Deletion: Insertion and deletion operations can be performed efficiently in linked lists, especially compared to arrays, as they do not require shifting elements.</li></p>
+      <h2>Disadvantage of Linked List:</h2><p>
+        <li>No Random Access: Unlike arrays, linked lists do not support random access, meaning accessing an element by index requires traversing the list from the beginning.</li>
+        <li>Extra Memory Overhead: Linked lists require additional memory for storing references/pointers to the next node, which can lead to higher memory overhead compared to arrays.</li>
+        <li>Traversal Overhead: Traversing a linked list requires following pointers from one node to another, which can be slower compared to accessing elements directly in an array.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+      {{dataset.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+      {{dataset.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+      {{dataset.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+    //animation start
+    const linkedList = [];
+    const linkedListContainer = document.querySelector('.linked-list');
+    let hue = 0;
+
+    function addItem() {
+        const newItem = document.createElement('div');
+        newItem.classList.add('list-item');
+        newItem.textContent = linkedList.length + 1;
+        newItem.style.setProperty('--hue', hue);
+        linkedList.push(newItem);
+        linkedListContainer.appendChild(newItem);
+        hue = (hue + 30) % 360; // Rotate through hues
+    }
+
+    function removeItem() {
+        const removedItem = linkedList.pop();
+        if (removedItem) {
+            linkedListContainer.removeChild(removedItem);
+        }
+    }
+    //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

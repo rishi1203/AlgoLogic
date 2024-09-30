@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="{% static 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css' %}">
+    <title>AlgoLogic</title>
+    <link rel="stylesheet" href="{% static 'index.css' %}"/>
+</head> 
+<body> 
+<!--Header section start-->
+<nav>
+    <div class="wrapper">
+      <img src="{% static './img/logo.png' %}" alt="" class="logo">
+      <input type="radio" name="slider" id="menu-btn">
+      <input type="radio" name="slider" id="close-btn">
+      <ul class="nav-links">
+        <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="#" class="desktop-item">Tests</a>
+            <input type="checkbox" id="showMin">
+            <label for="showMin" class="mobile-item">Test</label>
+            <ul class="drop-min">
+              <li><a href="{% url 'pytest' %}">Python</a></li>
+              <li><a href="{% url 'cpptest' %}">C++</a></li>
+              <li><a href="{% url 'javatest' %}">Java</a></li>
+            </ul>
+        </li>
+        <li>
+          <a href="#" class="desktop-item">DSA</a>
+          <input type="checkbox" id="showDrop">
+          <label for="showDrop" class="mobile-item">DSA</label>
+          <ul class="drop-menu">
+            <li><a href="{% url 'array' %}">Array</a></li>
+            <li><a href="{% url 'binarytree' %}">Binary Tree</a></li>
+            <li><a href="{% url 'HashTable' %}">Hash Table</a></li>
+            <li><a href="{% url 'Heap' %}">Heap</a></li>
+            <li><a href="{% url 'Linkedlist' %}">Linked List</a></li>
+            <li><a href="{% url 'queue' %}">Queue</a></li>
+            <li><a href="{% url 'setmap' %}">Set & Map</a></li>
+            <li><a href="{% url 'stack' %}">Stack</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#" class="desktop-item">Algorithms</a>
+          <input type="checkbox" id="showMega">
+          <label for="showMega" class="mobile-item">All Types of Algorithms</label>
+          <div class="mega-box">
+            <div class="content">
+              <div class="row">
+                <header>Search Algorithms</header>
+                <ul class="mega-links">
+                  <li><a href="{% url 'LinearSearch' %}">Linear Search</a></li>
+                  <li><a href="{% url 'binary' %}">Binary Search</a></li>
+                  <li><a href="{% url 'BFS' %}">BFS</a></li>
+                  <li><a href="{% url 'DFS' %}">DFS</a></li>
+                </ul>
+              </div>
+              <div class="row">
+                <header>Graphs</header>
+                <ul class="mega-links">
+                  <li><a href="{% url 'BFS' %}">BFS</a></li>
+                  <li><a href="{% url 'DFS' %}">DFS</a></li>
+                  <li><a href="{% url 'djistra' %}">Dijkstra Algorithm</a></li>
+                </ul>
+              </div>
+              <div class="row">
+                <header>Sorting Algorithms</header>
+                <ul class="mega-links">
+                  <li><a href="{% url 'Merge' %}">Merge Sort</a></li>
+                  <li><a href="{% url 'Insertion' %}">Insertion Sort</a></li>
+                  <li><a href="{% url 'quicksort' %}">Quick Sort</a></li>
+                  <li><a href="{% url 'selectionsort' %}">Selection Sort</a></li>
+                  <li><a href="{% url 'bubble' %}">Bubble Sort</a></li>
+                  <li><a href="{% url 'bucket' %}">Bucket Sort</a></li>
+                  <li><a href="{% url 'counting' %}">Counting Sort</a></li>
+                  <li><a href="{% url 'Heap' %}">Heap Sort</a></li>
+                  <li><a href="{% url 'radix' %}">Radix Sort</a></li>
+                </ul>
+              </div>
+              <div class="row">
+                <header>Gready Algorithm</header>
+                <ul class="mega-links">
+                  <li><a href="{% url 'djistra' %}">Dijkstra Algorithm</a></li>
+                </ul>
+              </div>
+              <div class="row">
+                <header>Divide & Conquer</header>
+                <ul class="mega-links">
+                    <li><a href="{% url 'Merge' %}">Merge Sort</a></li>
+                    <li><a href="{% url 'quicksort' %}">Quick Sort</a></li>
+                    <li><a href="{% url 'binary' %}">Binary Search</a></li>
+                </ul>
+              </div>
+              <div class="row">
+                <header>Numerical Algorithms</header>
+                <ul class="mega-links">
+                  <li><a href="{% url 'Euclidean' %}">Euclidean Algorithms</a></li>
+                  <li><a href="{% url 'primalitytest' %}">Primality Testing</a></li>
+                </ul>
+              </div>
+              <div class="row">
+                <header>Tree Algorithms</header>
+                <ul class="mega-links">
+                  <li><a href="{% url 'treetraversal' %}">Tree Traversal</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        {% if user.is_authenticated %}
+               
+        <li class="nav-item">
+          <a class="nav-link" > Hello,{{user.first_name}}</a>
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li> 
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}">Register</a>
+        </li>
+      {% endif %}
+      </ul>
+      <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+    </div>
+</nav>
+<br>
+<br>
+{% block content %}
+
+
+{% endblock %}
+<footer class="footer">
+    <div class="footer-row">
+        <div class="footer-col">
+            <img src="{% static './img/logo.png' %}">
+            <h2>About Us</h2>
+            <p>This is DSA Based Website Which help to Learn Algorithms in Easy way ,along with explaination,
+                code support
+            </p>
+        </div>
+      <div class="footer-col">
+        <h2>AlgoLogic</h2>
+        <ul class="links">
+          <li><a href="#">Data Structure</a></li>
+          <li><a href="#">Algorithms</a></li>
+          <li><a href="#">Test</a></li>
+          <li><a href="#">Language Support</a></li>
+          <li><a href="#">Code Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Test</h2>
+        <ul class="links">
+          <li><a href="#">Python Test</a></li>
+          <li><a href="#">Java Test</a></li>
+          <li><a href="#">C++ Test</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Language Support</h2>
+        <ul class="links">
+          <li><a href="#">Python</a></li>
+          <li><a href="#">Java</a></li>
+          <li><a href="#">C++</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Code Support</h2>
+        <ul class="links">
+          <li><a href="#">Python Language</a></li>
+          <li><a href="#">Java Language</a></li>
+          <li><a href="#">C++ Language</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Created by :</h2>
+        <ul class="links">
+        <li>Khushi Dhulia</li><br><li>Rishikesh Joshi</li><br><li>Raj Jaiswal</li></ul>
+        <div class="icons">
+          <i class="fa-brands fa-facebook-f"></i>
+          <i class="fa-brands fa-twitter"></i>
+          <i class="fa-brands fa-linkedin"></i>
+          <i class="fa-brands fa-github"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body> 
+</html>
+
+

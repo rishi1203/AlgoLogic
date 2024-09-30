@@ -1,0 +1,320 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Array</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+
+</head>
+<body>
+  <br>
+  <br>
+  <style>
+    .animation{
+        text-align: center;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    /* CSS styles for the stack container and items */
+    .stack {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 10px;
+    }
+    .stack-item {
+        width: 100px;
+        height: 40px;
+        background-color: hsl(var(--hue), 70%, 50%);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .b1,.b2 {
+        height: 40px;
+        width: 60px;
+        font-size: 17px;
+        padding: 10px;
+        background-color: #0492C2;/*00B4D8*/
+        color:white;
+        border:1px solid white;
+    }
+    .b1:hover {
+        color: black;
+        background-color: #82EEFD;/*#63C5DA*/
+    }.b2:hover {
+        color: black;
+        background-color: #82EEFD;
+    }
+    .explaination{
+        padding-left: 140px;
+        padding-right: 120px;
+        padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+    <div class="animation">
+    <div class="stack">
+        <!-- Stack items will be dynamically added here -->
+    </div><br>
+    <button onclick="pushItem()" class="b1">Push</button>
+    <button onclick="popItem()" class="b2">Pop</button>
+    </div><br>
+    <div class="explaination">
+    <h2>What is an Array:</h2>
+    <p>An array is a collection of items of the same variable type that are stored at contiguous memory locations. 
+      It’s one of the most popular and simple data structures and is often used to implement other data structures. 
+      Each item in an array is indexed starting with 0. Each element in an array is accessed through its index.
+    </p>
+    <h2>Types of Array:</h2>
+    <p>There are two main types of Arrays:
+      <li>One-dimensional arrays: These arrays store a single row of elements.</li>
+      <li>Multidimensional arrays: These arrays store multiple rows of elements.</li>
+    </p>
+    <h2>Operation of Array:</h2>
+    <p>Common operations performed on Arrays include:
+      <li>Traversal: Visiting each element of an array in a specific order (e.g., sequential, reverse).</li>
+      <li>Insertion: Adding a new element to an array at a specific index.</li>
+      <li>Deletion: Removing an element from an array at a specific index.</li>
+      <li>Searching: Finding the index of an element in an array.</li>
+    </p>
+    <h2>Applications of Array:</h2>
+    <p>Arrays are used in a wide variety of applications, including:
+      <li>Storing data for processing</li>
+      <li>Implementing data structures such as stacks and queues</li>
+      <li>Representing data in tables and matrices</li>
+      <li>Creating dynamic data structures such as linked lists and trees</li>
+    </p>
+    <h2>Advantage of Array:</h2>
+    <p>
+      <li>Efficient Access: Arrays provide constant-time access to elements based on their index, making it efficient to retrieve elements.</li>
+      <li>Memory Efficiency: Arrays allocate contiguous memory, which reduces memory overhead compared to other data structures. This makes them efficient in terms of memory usage.</li></p>
+    <h2>Disadvantage of  Array</h2>
+    <p>
+      <li>Fixed Size: Arrays have a fixed size, meaning they cannot dynamically resize themselves. If the size needs to change, it requires creating a new array and copying elements, which can be inefficient.</li>
+      <li>Limited Flexibility: Arrays typically require elements to be of the same data type and size, limiting their flexibility compared to other data structures like linked lists or hash tables</li></p>
+    </div>
+  <div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{dataset.java_code}}
+  </textarea>
+</div>
+<br>
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{dataset.python_code}}
+  </textarea>
+</div>
+<br>
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{dataset.cpp_code}}
+</textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+        const stack = [];
+        const stackContainer = document.querySelector('.stack');
+        let hue = 0;
+
+        function pushItem() {
+            const newItem = document.createElement('div');
+            newItem.classList.add('stack-item');
+            newItem.textContent = stack.length + 1;
+            newItem.style.setProperty('--hue', hue);
+            stack.push(newItem);
+            stackContainer.appendChild(newItem);
+            hue = (hue + 30) % 360; // Rotate through hues
+        }
+
+        function popItem() {
+            const removedItem = stack.pop();
+            if (removedItem) {
+                stackContainer.removeChild(removedItem);
+            }
+        }
+
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+
+{% endblock %}

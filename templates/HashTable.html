@@ -1,0 +1,379 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hash Table</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+  .animation {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60vh;
+      margin: 0;
+  }
+
+  .container {
+      max-width: 600px;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid black;
+      border-radius: 5px;
+  }
+
+  .section {
+      margin-bottom: 20px;
+  }
+
+  .section-header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+  }
+
+  .item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+  }
+
+  .key {
+      font-weight: bold;
+  }
+
+  .index, .value {
+      color: #666;
+  }
+  .explaination{
+    padding-left: 140px;
+    padding-right: 120px;
+    padding-bottom: 10px;
+  }
+  .explaination p,li{
+    font-size: 17px;
+  }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="animation">
+  <div class="container">
+      <div class="section">
+          <div class="section-header">Keys</div>
+          <div id="keys"></div>
+      </div>
+      <div class="section">
+          <div class="section-header">Index</div>
+          <div id="indices"></div>
+      </div>
+      <div class="section">
+          <div class="section-header">Values</div>
+          <div id="values"></div>
+      </div>
+  </div>
+  </div>
+    <div class="explaination">
+      <h2>What is Hash Table:</h2>
+        <p>A hash table is a data structure that stores key-value pairs where each key is unique. It uses a hash 
+          function to compute an index (hash code) into an array of buckets or slots, from which the desired value can be found.
+        </p>
+      <h2>Types of Hash Table:</h2>
+      <p>There are different types of hash tables based on their collision resolution techniques:
+        <li>Open Addressing: In this approach, when a collision occurs (i.e., when two keys hash to the same index), the algorithm searches for the next available slot in the table to place the collided item.</li>
+        <li>Separate Chaining: In this approach, each bucket in the hash table is a linked list, and collisions are resolved by chaining multiple key-value pairs that hash to the same index.</li>
+      </p>
+      <h2>Operation of Hash Table:</h2><p>
+        <li>Hashing: The hash function computes a hash code for each key, determining the index where the key-value pair will be stored.</li>
+        <li>Collision Handling: If two keys hash to the same index, collision resolution techniques are used to handle the collision.</li>
+        <li>Insertion: The key-value pair is inserted into the hash table at the computed index.</li>
+        <li>Retrieval: To retrieve a value associated with a given key, the hash function is applied to the key to find its index, and then the value is retrieved from that index.</li></p>
+      <h2>Application of Hash Table:</h2><p>
+        <li>Databases: Hash tables are used in database indexing to quickly locate records based on their keys.</li>
+        <li>Caches: Hash tables are used in caching mechanisms to store frequently accessed data for quick retrieval.</li>
+        <li>Symbol Tables: They are used to implement symbol tables in compilers, where identifiers (keys) are associated with information (values).</li></p>
+      <h2>Advantage of Hash Table:</h2><p>
+        <li>Fast Lookup: Hash tables provide constant-time average-case lookup, insertion, and deletion operations, making them highly efficient for large datasets.</li>
+        <li>Flexible Key-Value Storage: Hash tables can store key-value pairs with arbitrary keys and values, providing a flexible data structure for various applications.</li></p>
+      <h2>Disadvantage of Hash Table:</h2><p>
+        <li>Collisions: Hash collisions can occur when two keys produce the same hash code, leading to performance degradation. Collision resolution techniques are needed to handle collisions effectively.</li>
+        <li>Space Overhead: Hash tables may have a significant space overhead, especially if the load factor (ratio of stored items to available slots) is high, leading to increased memory consumption.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{dataset.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{dataset.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{dataset.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+  //animation start
+  class HashTable {
+    constructor() {
+        this.size = 10;
+        this.buckets = Array(this.size);
+
+        for (let i = 0; i < this.buckets.length; i++) {
+            this.buckets[i] = [];
+        }
+    }
+
+    hash(key) {
+        let total = 0;
+        for (let i = 0; i < key.length; i++) {
+            total += key.charCodeAt(i);
+        }
+        return total % this.size;
+    }
+
+    set(key, value) {
+        const index = this.hash(key);
+        this.buckets[index].push({ key, value });
+    }
+
+    get(key) {
+        const index = this.hash(key);
+        for (const item of this.buckets[index]) {
+            if (item.key === key) {
+                return item.value;
+            }
+        }
+        return null;
+    }
+}
+
+// Initialize hash table
+const hashTable = new HashTable();
+
+// Update UI function
+function updateUI() {
+    const keysContainer = document.getElementById('keys');
+    const indicesContainer = document.getElementById('indices');
+    const valuesContainer = document.getElementById('values');
+
+    keysContainer.innerHTML = '';
+    indicesContainer.innerHTML = '';
+    valuesContainer.innerHTML = '';
+
+    hashTable.buckets.forEach((bucket, index) => {
+        bucket.forEach(item => {
+            const keyElement = document.createElement('div');
+            keyElement.classList.add('item');
+            keyElement.innerHTML = `<span class="key">${item.key}</span>`;
+            keysContainer.appendChild(keyElement);
+
+            const indexElement = document.createElement('div');
+            indexElement.classList.add('item');
+            indexElement.textContent = index;
+            indicesContainer.appendChild(indexElement);
+
+            const valueElement = document.createElement('div');
+            valueElement.classList.add('item');
+            valueElement.textContent = item.value;
+            valuesContainer.appendChild(valueElement);
+        });
+    });
+}
+
+// Example usage
+hashTable.set('apple', 10);
+hashTable.set('banana', 20);
+hashTable.set('orange', 30);
+
+// Update UI after setting initial values
+updateUI();
+  //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,386 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radix Sort</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+  
+    .animation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+        margin: 0;
+    }
+    .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 20px;
+    }
+    .column h2 {
+        margin-bottom: 10px;
+    }
+    .circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #0492C2;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px 0;
+    }.explaination{
+        padding-left: 140px;
+        padding-right: 120px;
+        padding-bottom: 10px;
+      }
+      .explaination p,li{
+        font-size: 17px;
+      }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+ /* For screens larger than or equal to 1024px */
+  @media (min-width: 1024px) {
+    .code-container {
+      width: 80%;
+    }
+    .explaination {
+      padding-left: 150px;
+      padding-right: 150px;
+    }
+  }
+  
+  /* For screens between 768px and 1023px */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .code-container {
+      width: 90%;
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens between 480px and 767px */
+  @media (min-width: 480px) and (max-width: 767px) {
+    .code-container {
+      width: 95%;
+  
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens smaller than 480px */
+  @media (max-width: 479px) {
+    .code-container {
+      width: 100%;
+      padding: 10px;
+    }
+    .explaination {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+  <br>
+  <br>
+  <br>
+<div class="animation">
+    <div class="column">
+        <h2>Index</h2>
+        <div id="index-circles"></div>
+    </div>
+    <div class="column">
+        <h2>1 Pass</h2>
+        <div id="pass1-circles"></div>
+    </div>
+    <div class="column">
+        <h2>2 Pass</h2>
+        <div id="pass2-circles"></div>
+    </div>
+    <div class="column">
+        <h2>3 Pass</h2>
+        <div id="pass3-circles"></div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+    <div class="explaination">
+    <h2>What is Radix Sort:</h2>
+        <p>Radix sort is a non-comparison-based sorting algorithm that sorts integers by processing individual 
+            digits or characters of the keys to be sorted. It sorts elements by their digit values, starting from 
+            the least significant digit (rightmost) and moving towards the most significant digit (leftmost).
+        </p>
+    <h2>Operation of Radix Sort:</h2><p>
+        <li>Digit Extraction: Radix sort extracts digits or characters from the keys to be sorted, starting from the least significant digit.</li>
+        <li>Bucketing: It then distributes the keys into buckets based on the value of the current digit.</li>
+        <li>Sorting: After distributing the keys into buckets, radix sort recursively applies the same process to each bucket
+            , sorting them based on the next digit.</li>
+        <li>Concatenation: Finally, radix sort concatenates the sorted buckets to produce the sorted array.</li></p>
+    <h2>Application of Radix Sort:</h2><p>
+        <li>Integer Sorting: Radix sort is primarily used for sorting integers, where the keys to be sorted are represented as integers.</li>
+        <li>String Sorting: It can also be adapted to sort strings by treating each character as a digit and sorting based 
+            on their ASCII or Unicode values.</li></p>
+    <h2>Advantage of Radix Sort:</h2><p>
+        <li>Linear Time Complexity: Radix sort has a time complexity of O(nk), where n is the number of elements to 
+            be sorted and k is the number of digits or characters in the keys. It is linear with respect to the size 
+            of the input and can be very efficient for sorting large datasets.</li>
+        <li>Stability: Radix sort is a stable sorting algorithm, meaning it preserves the relative order of equal elements in the input array.</li></p>
+    <h2>Disadvantage of Radix Sort:</h2><p>
+        <li>Space Complexity: Radix sort can have a significant space overhead, especially when dealing with large integers or strings with many characters, as it requires additional memory space for bucket storage.</li>
+        <li>Limited Applicability: Radix sort is primarily suitable for sorting integers or strings with a fixed number of digits or characters. It may not be as efficient or applicable for sorting floating-point numbers or other types of data</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start
+   async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function getMax(redix_arr) {
+    let max = redix_arr[0];
+    for (let i = 1; i < redix_arr.length; i++) {
+        if (redix_arr[i] > max) {
+            max = redix_arr[i];
+        }
+    }
+    return max;
+}
+
+async function countingSort(redix_arr, exp, pass) {
+    let output = new Array(redix_arr.length);
+    let count = new Array(10).fill(0);
+
+    for (let i = 0; i < redix_arr.length; i++) {
+        count[Math.floor(redix_arr[i] / exp) % 10]++;
+    }
+
+    for (let i = 1; i < 10; i++) {
+        count[i] += count[i - 1];
+    }
+
+    for (let i = redix_arr.length - 1; i >= 0; i--) {
+        output[count[Math.floor(redix_arr[i] / exp) % 10] - 1] = redix_arr[i];
+        count[Math.floor(redix_arr[i] / exp) % 10]--;
+    }
+
+    for (let i = 0; i < redix_arr.length; i++) {
+        redix_arr[i] = output[i];
+        updateDisplay(redix_arr, pass);
+        await sleep(1000); 
+        // Adjust the speed of animation (milliseconds)
+    }
+}
+
+async function radixSort(redix_arr) {
+    let max = await getMax(redix_arr);
+
+    await countingSort(redix_arr, 1, 'Index');
+    await countingSort(redix_arr, 10, '1 Pass');
+    await countingSort(redix_arr, 100, '2 Pass');
+    await countingSort(redix_arr, 1000, '3 Pass');
+}
+
+function createCircle(value) {
+    let circle = document.createElement('div');
+    circle.className = 'circle';
+    circle.textContent = value;
+    return circle;
+}
+
+function updateDisplay(redix_arr, pass) {
+    let columnId = '';
+    switch (pass) {
+        case 'Index':
+            columnId = 'index-circles';
+            break;
+        case '1 Pass':
+            columnId = 'pass1-circles';
+            break;
+        case '2 Pass':
+            columnId = 'pass2-circles';
+            break;
+        case '3 Pass':
+            columnId = 'pass3-circles';
+            break;
+        default:
+            break;
+    }
+
+    const column = document.getElementById(columnId);
+    column.innerHTML = '';
+    redix_arr.forEach(value => {
+        const circle = createCircle(value);
+        column.appendChild(circle);
+    });
+}
+
+// Initial array for sorting
+let redix_arr = [170, 45, 75, 90, 802, 24, 2, 66,1024];
+
+// Start the animation
+radixSort(redix_arr);
+
+   //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

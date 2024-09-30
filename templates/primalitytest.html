@@ -1,0 +1,352 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primality Test</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+  
+    .animation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 25vh;
+        margin: 0;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    input[type="number"] {
+        padding: 8px;
+        width: 20vh;
+        border:  1px solid black;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 17px;
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: #0492C2;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 17px;
+    }
+
+    .button:hover {
+        background-color: #82EEFD;
+        color: black;
+    }
+
+    #result {
+        margin-top: 20px;
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+    .prime {
+        color: #088f8f;
+    }
+
+    .not-prime {
+        color: red;
+    }.explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+        
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+    
+<div class="animation">
+    <div class="container">
+        <h2>Primality Testing</h2>
+        <input type="number" id="numberInput" placeholder="Enter a number">
+        <button onclick="checkPrimality()" class="button">Check Primality</button>
+        <div id="result"></div>
+    </div>
+</div>
+    <div class="explaination">
+      <h2>What is Primality Test:</h2>
+        <p>A primality test is an algorithm or method used to determine whether a given number is prime (a number 
+          greater than 1 that has no positive divisors other than 1 and itself) or composite (a number that is not prime).
+        </p>
+      <h2>Types of primality tests:</h2>
+      <p>There are several types of primality tests, including:
+        <li>Trial Division: This method checks whether a number is divisible by any integer less than its square root. It's simple but not efficient for large numbers.</li>
+        <li>Probabilistic Tests: These tests provide a probability that a given number is prime. Examples include the Miller-Rabin test and Fermat's primality test.</li>
+        <li>Deterministic Tests: These tests provide a definitive answer whether a number is prime or composite. Examples include the AKS primality test and the Elliptic Curve Primality Proving (ECPP) algorithm.</li>
+      </p>
+      <h2>Operation of primality tests:</h2><p>
+        <li>Trial Division: For each integer from 2 to the square root of the given number, check if the number is divisible by that integer.</li>
+        <li>Probabilistic Tests: These tests use probabilistic algorithms to check if a number is likely to be prime with a high degree of confidence.</li>
+        <li>Deterministic Tests: These tests use deterministic algorithms that provide a definitive answer whether a number is prime or composite.</li></p>
+      <h2>Application of primality tests:</h2><p>
+        <li>Cryptography: Primality testing is crucial in cryptographic algorithms, such as RSA encryption, where prime numbers are used to generate public and private keys.</li>
+        <li>Number Theory: Primality testing is important in number theory for studying the properties of prime numbers and their distribution</li></p>
+      <h2>Advantage of primality tests:</h2><p>
+        <li>Efficiency: Some primality tests, especially probabilistic ones, are very efficient for large numbers compared to brute-force methods like trial division.</li>
+        <li>Scalability: Primality tests can be scaled to handle very large numbers, making them suitable for applications in cryptography and computational number theory.</li></p>
+      <h2>Disadvantage of primality tests:</h2><p>
+        <li>False Positives: Some probabilistic primality tests may return false positives, meaning they incorrectly identify a composite number as prime with a small probability.</li>
+        <li>Complexity: Deterministic primality tests, especially those with polynomial time complexity, can be complex to implement and understand, requiring advanced mathematical concepts.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //aniamtion start
+   
+   function checkPrimality() {
+    const number = parseInt(document.getElementById('numberInput').value);
+
+    if (isNaN(number)) {
+        alert('Please enter a valid number.');
+        return;
+    }
+
+    if (number <= 1) {
+        displayResult(false);
+        return;
+    }
+
+    if (number === 2 || number === 3) {
+        displayResult(true);
+        return;
+    }
+
+    if (number % 2 === 0) {
+        displayResult(false);
+        return;
+    }
+
+    let isPrime = true;
+    const sqrtNum = Math.sqrt(number);
+
+    for (let i = 3; i <= sqrtNum; i += 2) {
+        if (number % i === 0) {
+            isPrime = false;
+            break;
+        }
+    }
+
+    displayResult(isPrime);
+}
+
+function displayResult(isPrime) {
+    const resultElement = document.getElementById('result');
+    resultElement.textContent = isPrime ? 'Prime' : 'Not Prime';
+    resultElement.className = isPrime ? 'prime' : 'not-prime';
+}
+
+   //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

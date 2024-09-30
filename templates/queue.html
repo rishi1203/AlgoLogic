@@ -1,0 +1,346 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Queue</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation{
+        text-align: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    .queue {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+    .queue-item {
+        width: 100px;
+        height: 40px;
+        background-color: hsl(var(--hue), 70%, 50%);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .button{
+        margin-top: 20px;
+        margin-right: 10px;
+        background-color: #0492C2;
+        color: white;
+        padding: 13px;
+        border: none;
+        border-radius: 5px;
+        font-size: 17px;
+    }
+    .button:hover{
+      background-color: #82EEFD;
+      color: black;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+          
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="animation">
+    <div class="queue">
+        <!-- Queue items will be dynamically added here -->
+    </div>
+    <button onclick="insertItem()" class="button">Insert</button>
+    <button onclick="deleteItem()" class="button">Delete</button>
+    <button onclick="peekItem()" class="button">Peek</button>
+    <button onclick="checkIsEmpty()" class="button">isEmpty</button>
+    <button onclick="checkIsFull()" class="button">isFull</button>
+</div>
+    <div class="explaination">
+      <h2>What is Queue:</h2>
+        <p>A queue is a linear data structure that follows the First In, First Out (FIFO) principle, where elements 
+          are inserted at the rear (enqueue) and removed from the front (dequeue). It's analogous to a queue of people waiting in line for a service.
+        </p>
+      <h2>Types of Queue:</h2><p>
+        There are various types of queues, including:
+        <li>Linear Queue: In a linear queue, elements are stored in a linear fashion and have a fixed size.</li>
+        <li>Circular Queue: A circular queue is similar to a linear queue but wraps around at the end, effectively making it a circular structure.</li>
+        <li>Priority Queue: A priority queue is a special type of queue where each element is assigned a priority, and elements with higher priority are dequeued before those with lower priority.</li>
+        <li>Double-ended Queue (Deque): A deque allows insertion and deletion of elements from both the front and rear ends.</li>
+      </p>
+      <h2>Opearion of Queue:</h2><p>
+        <li>Enqueue: Insert an element at the rear end of the queue.</li>
+        <li>Dequeue: Remove and return the element from the front end of the queue.</li>
+        <li>Peek: Get the element at the front end of the queue without removing it.</li>
+        <li>IsEmpty: Check if the queue is empty.</li>
+        <li>IsFull: Check if the queue is full (applicable for fixed-size queues).</li></p>
+      <h2>Application of Queue:</h2><p>
+        <li>Job Scheduling: Queues are used in job scheduling algorithms, such as in operating systems for managing tasks in a multitasking environment.</li>
+        <li>Breadth-First Search (BFS): Queues are used in BFS traversal algorithms for graph traversal, where nodes are explored level by level.</li>
+        <li>Buffering: Queues are used in buffering mechanisms, such as in computer networks for storing data packets before transmission.</li>
+        <li>Printers and Operating Systems: Queues are used in printer queues and operating system queues for managing tasks and processes.</li></p>
+      <h2>Advantage of Queue:</h2><p>
+        <li>Efficient for FIFO Operations: Queues are efficient for enqueue and dequeue operations, making them suitable for scenarios where elements are processed in the order they were added.</li>
+        <li>Simple Implementation: Queues have a simple and intuitive interface, making them easy to implement and understand.</li></p>
+      <h2>Diadvantage of Queue:</h2><p>
+        <li>Limited Access: Queues only allow access to elements at the front and rear ends, restricting random access to elements in the middle.</li>
+        <li>Size Limitation: Fixed-size queues have a limited capacity, and once full, new elements cannot be added unless elements are dequeued first. This can lead to potential data loss or blocking.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+      {{dataset.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+      {{dataset.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+      {{dataset.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start
+   
+   const queue = [];
+   const queueContainer = document.querySelector('.queue');
+   let hue = 0;
+
+   function insertItem() {
+       const newItem = document.createElement('div');
+       newItem.classList.add('queue-item');
+       newItem.textContent = queue.length + 1;
+       newItem.style.setProperty('--hue', hue);
+       queue.push(newItem);
+       queueContainer.appendChild(newItem);
+       hue = (hue + 30) % 360; // Rotate through hues
+   }
+
+   function deleteItem() {
+       const removedItem = queue.shift();
+       if (removedItem) {
+           queueContainer.removeChild(removedItem);
+       }
+   }
+
+   function peekItem() {
+       const frontItem = queue[0];
+       if (frontItem) {
+           alert(`Front item: ${frontItem.textContent}`);
+       } else {
+           alert('Queue is empty.');
+       }
+   }
+
+   function checkIsEmpty() {
+       if (queue.length === 0) {
+           alert('Queue is empty.');
+       } else {
+           alert('Queue is not empty.');
+       }
+   }
+
+   function checkIsFull() {
+       // Assuming a fixed-size queue (adjust as needed)
+       const maxSize = 5;
+       if (queue.length === maxSize) {
+           alert('Queue is full.');
+       } else {
+           alert('Queue is not full.');
+       }
+   }
+   //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

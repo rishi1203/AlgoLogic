@@ -1,0 +1,341 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BFS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 55vh;
+        margin: 0;
+    }
+    .square {
+        width: 50px;
+        height: 50px;
+        background-color: #0492C2;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px;
+    }
+    #searchingFor {
+        margin-top: 20px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+  .explaination{
+    padding-left: 140px;
+    padding-right: 120px;
+    padding-bottom: 10px;
+}
+.explaination p,li{
+  font-size: 17px;
+}
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .animation{
+    height: 45vh;
+  }
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .animation{
+    height: 45vh;
+  }
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .animation{
+    height: 45vh;
+  }
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <br>
+  <br>
+<div class="animation">
+    <div id="squares"></div>
+    <div id="searchingFor">Searching for: </div>
+</div>
+<div class="explaination">
+    <h2>What is BFS:</h2>
+    <p>BFS is a graph traversal algorithm that explores all the vertices of a graph or tree level by level. 
+      It starts at a specified node (often referred to as the root) and explores all the neighbor nodes at the 
+      present level before moving on to the nodes at the next level.
+    </p>
+    <h2>Operation of BFS:</h2><p>
+      <li>Initialize a queue data structure to store nodes to be visited.</li>
+      <li>Enqueue the starting node into the queue.</li>
+      <li>Dequeue a node from the queue and visit it.</li>
+      <li>Enqueue all of its neighboring nodes that have not yet been visited.</li>
+      <li>Repeat steps 3-4 until the queue is empty.</li></p>
+    <h2>Application of BFS:</h2><p>
+      <li>Shortest Path Finding: BFS can be used to find the shortest path between two nodes in an unweighted graph or tree.</li>
+      <li>Connected Components: It can identify connected components in an undirected graph.</li>
+      <li>Bipartite Graph Checking: BFS can determine if a graph is bipartite by assigning colors to nodes and checking for conflicts.</li>
+      <li>Network Broadcasting: BFS can simulate broadcasting in networks to ensure all nodes receive a message in the minimum number of steps.</li></p>
+    <h2>Adavntage of BFS:</h2><p>
+      <li>Guaranteed Shortest Path in Unweighted Graphs: BFS guarantees finding the shortest path in unweighted graphs or trees.</li>
+      <li>Finds the Shallowest Node First: BFS explores all nodes at a given depth before moving deeper, making it suitable for finding shortest paths in terms of edges.</li></p>
+    <h2>Disadvantage of BFS:</h2><p>
+      <li>Memory Intensive: BFS requires storing all the visited nodes and their neighbors in a queue, which can be memory-intensive, especially for large graphs.
+      <li>Inefficient for Dense Graphs: In dense graphs, where there are many edges between nodes, BFS can be less efficient compared to other algorithms 
+        like depth-first search (DFS) due to the need to explore all neighbors at each level.</li></p>
+</div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+      {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+      {{algorithm.python_code}}
+</textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+    //animation 
+    async function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function bfs(graph, startNode) {
+        let visited = new Set();
+        let queue = [startNode];
+
+        while (queue.length > 0) {
+            let currentNode = queue.shift();
+            if (!visited.has(currentNode)) {
+                visited.add(currentNode);
+                bfs_updateDisplay(graph, visited, currentNode);
+                await sleep(1000); // Adjust the speed of animation (milliseconds)
+                graph[currentNode].forEach(neighbor => {
+                    if (!visited.has(neighbor) && !queue.includes(neighbor)) {
+                        queue.push(neighbor);
+                    }
+                });
+            }
+        }
+        alert('Breadth-First Search completed.');
+    }
+
+    function bfs_createSquare(value, visited) {
+        let square = document.createElement('div');
+        square.className = 'square';
+        square.textContent = value;
+        if (visited) {
+            square.style.backgroundColor = '#82EEFD';
+            square.style.color="black"; // Highlight visited squares
+        }
+        return square;
+    }
+
+    function bfs_updateDisplay(graph, visitedNodes, searchingFor) {
+        const squaresContainer = document.getElementById('squares');
+        squaresContainer.innerHTML = '';
+        Object.keys(graph).forEach(node => {
+            const square = bfs_createSquare(node, visitedNodes.has(node));
+            squaresContainer.appendChild(square);
+        });
+        document.getElementById('searchingFor').textContent = 'Searching for: ' + searchingFor;
+    }
+
+    // Define the graph as an adjacency list
+    const graph = {
+        '1': ['2', '3'],
+        '2': ['1', '4', '5'],
+        '3': ['1', '6'],
+        '4': ['2'],
+        '5': ['2', '6'],
+        '6': ['3', '5']
+    };
+
+    // Start the animation from node '1'
+    bfs(graph, '1');
+    //animation ends
+
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

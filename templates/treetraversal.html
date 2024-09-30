@@ -1,0 +1,398 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tree Traversal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 55vh;
+        margin: 0;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  #canvas{
+    width: 100vh;
+    padding-top: 10px;
+  }
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  #canvas{
+    width: 85vh;
+  }
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  #canvas{
+    width: 59vh;
+  }
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  #canvas{
+    width: 45vh;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    margin-top: 0px;
+  }
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="animation">
+    <canvas id="canvas" width="650" height="400"></canvas>
+</div>
+
+    <div class="explaination">
+      <h2>What is Tree Traversal:</h2>
+        <p>Tree traversal refers to the process of visiting each node in a tree data structure exactly once. 
+          It allows accessing and processing the elements/nodes of a tree in a specific order. There are different 
+          types of tree traversals, each defining a specific order in which nodes are visited.
+        </p>
+      <h2>Types of Tree Traversal:</h2><p>
+        <li>In-order Traversal: Visit the left subtree, then the root, and finally the right subtree.</li>
+        <li>Pre-order Traversal: Visit the root, then the left subtree, and finally the right subtree.</li>
+        <li>Post-order Traversal: Visit the left subtree, then the right subtree, and finally the root.</li>
+        <li>Level-order Traversal (Breadth-first Traversal): Visit nodes level by level, starting from the root.</li></p>
+      <h2>Operation of Tree Traversal:</h2><p>
+        For each type of traversal:
+        <li>Visit: Perform an operation (e.g., print, process) on the current node.</li>
+        <li>Recursion: Traverse the left subtree recursively.</li>
+        <li>Recursion: Traverse the right subtree recursively.</li>
+      </p>
+      <h2>Application of Tree Traversal:</h2><p>
+        <li>Binary Search Trees (BST): Tree traversal is used to search, insert, delete, and traverse elements in binary search trees.</li>
+        <li>Expression Evaluation: In expression trees, tree traversal is used to evaluate arithmetic expressions.</li>
+        <li>File Systems: Traversing directory structures in file systems to list files and folders.</li>
+        <li>Parsing: Tree traversal is used in parsing algorithms to generate parse trees from source code.</li></p>
+      <h2>Advantage of Tree Traversal:</h2><p>
+        <li>Flexibility: Tree traversal provides flexibility in choosing the order of visiting nodes based on specific requirements.</li>
+        <li>Efficiency: Traversal algorithms typically have time complexities proportional to the number of nodes in the tree, making them efficient for processing large trees.</li></p>
+      <h2>Disadvantage of Tree Traversal:</h2><p>
+        <li>Recursive Overhead: Some traversal algorithms rely on recursion, which can lead to stack overflow errors for very deep trees.</li>
+        <li>Implementation Complexity: Implementing certain traversal algorithms, especially iterative versions, can be more complex compared to other data structures and algorithms.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start
+   
+   const canvas = document.getElementById('canvas');
+   const ctx = canvas.getContext('2d');
+
+   class TreeNode {
+       constructor(value) {
+           this.value = value;
+           this.left = null;
+           this.right = null;
+       }
+   }
+
+   function drawNode(x, y, value, color) {
+       ctx.beginPath();
+       ctx.arc(x, y, 20, 0, Math.PI * 2);
+       ctx.fillStyle = color;
+       ctx.fill();
+       ctx.stroke();
+       ctx.closePath();
+
+       ctx.font = '14px Arial';
+       ctx.fillStyle = '#000';
+       ctx.fillText(value, x - 6, y + 6);
+   }
+
+   function drawEdge(startX, startY, endX, endY, color) {
+       ctx.beginPath();
+       ctx.moveTo(startX, startY);
+       ctx.lineTo(endX, endY);
+       ctx.strokeStyle = color;
+       ctx.stroke();
+       ctx.closePath();
+   }
+
+   function drawTree(root, x, y, depth) {
+       if (!root) return;
+
+       const nodeX = x;
+       const nodeY = y;
+       const offsetX = 150;
+       const offsetY = 80;
+
+       const color = depth === 'preorder' ? '#88f8f' : depth === 'inorder' ? '#0492C2' : '#9FE2BF';
+
+       drawNode(nodeX, nodeY, root.value, color);
+
+       if (root.left) {
+           const childX = x - offsetX;
+           const childY = y + offsetY;
+           drawEdge(nodeX, nodeY, childX, childY, color);
+           drawTree(root.left, childX, childY, depth);
+       }
+
+       if (root.right) {
+           const childX = x + offsetX;
+           const childY = y + offsetY;
+           drawEdge(nodeX, nodeY, childX, childY, color);
+           drawTree(root.right, childX, childY, depth);
+       }
+   }
+
+   function inorderTraversal(root, result) {
+       if (!root) return;
+       inorderTraversal(root.left, result);
+       result.push(root.value);
+       inorderTraversal(root.right, result);
+   }
+
+   function preorderTraversal(root, result) {
+       if (!root) return;
+       result.push(root.value);
+       preorderTraversal(root.left, result);
+       preorderTraversal(root.right, result);
+   }
+
+   function postorderTraversal(root, result) {
+       if (!root) return;
+       postorderTraversal(root.left, result);
+       postorderTraversal(root.right, result);
+       result.push(root.value);
+   }
+
+   // Create a binary tree
+   const root = new TreeNode(1);
+   root.left = new TreeNode(2);
+   root.right = new TreeNode(3);
+   root.left.left = new TreeNode(4);
+   root.left.right = new TreeNode(5);
+   root.right.left = new TreeNode(6);
+   root.right.right = new TreeNode(7);
+
+   // Draw the tree
+   drawTree(root, canvas.width / 2, 50, '');
+
+   // Perform traversals
+   const inorderResult = [];
+   const preorderResult = [];
+   const postorderResult = [];
+
+   inorderTraversal(root, inorderResult);
+   preorderTraversal(root, preorderResult);
+   postorderTraversal(root, postorderResult);
+
+   let i = 0;
+
+   function animateTraversal() {
+       if (i >= inorderResult.length) return;
+
+       setTimeout(function() {
+           ctx.clearRect(0, 0, canvas.width, canvas.height);
+           drawTree(root, canvas.width / 2, 50, 'inorder');
+           drawNode(canvas.width / 2, 50, inorderResult[i], '#82EEFD');
+           i++;
+           animateTraversal();
+       }, 1000);
+   }
+
+   animateTraversal();
+   //animation end
+   // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

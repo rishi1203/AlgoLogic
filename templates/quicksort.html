@@ -1,0 +1,362 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Sort</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 30vh;
+        margin: 0;
+      }
+    
+      #container {
+        text-align: center;
+      }
+    
+      .array-container {
+        margin-bottom: 20px;
+      }
+    
+      .array-box {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: #82EEFD;
+        border: 1px solid black;
+        border-radius: 50%;
+        line-height: 40px;
+        margin-right: 5px;
+      }
+    
+      .sort-button {
+        padding: 10px;
+        font-size: 17px;
+        background-color: #0492C2;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+    
+      .sort-button:hover {
+        background-color: #82EEFD;
+        color: black;
+      }
+    
+      .quick-sort-step {
+        margin-bottom: 10px;
+      }
+      input{
+        width: 40vh;
+        font-size: 17px;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      #stepsContainer{
+        padding-top: 10px;
+      }
+      .explaination{
+        padding-left: 140px;
+        padding-right: 120px;
+        padding-bottom: 10px;
+      }
+      .explaination p,li{
+        font-size: 17px;
+      }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  /* For screens larger than or equal to 1024px */
+  @media (min-width: 1024px) {
+    .code-container {
+      width: 80%;
+    }
+    .explaination {
+      padding-left: 150px;
+      padding-right: 150px;
+    }
+  }
+  
+  /* For screens between 768px and 1023px */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .code-container {
+      width: 90%;
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens between 480px and 767px */
+  @media (min-width: 480px) and (max-width: 767px) {
+    .code-container {
+      width: 95%;
+  
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens smaller than 480px */
+  @media (max-width: 479px) {
+    .code-container {
+      width: 100%;
+      padding: 10px;
+    }
+    .explaination {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  
+</style>
+</head>
+<body> 
+<div class="animation">
+    <div id="container">
+      <div class="array-container" id="arrayContainer">
+        <!-- Array elements will be added here dynamically -->
+      </div>
+      <input type="text" id="inputArray" placeholder="Enter numbers separated by commas">
+      <button class="sort-button" onclick="startSorting()">Quick Sort</button>
+      <div id="stepsContainer">
+        <!-- Quick sort steps will be displayed here -->
+      </div>
+    </div>
+    </div>
+    <div class="explaination">
+      <h2>What is Quick Sort:</h2>
+        <p>Quick sort is a comparison-based sorting algorithm that employs the divide-and-conquer strategy to efficiently sort elements in an array. It works by selecting a 
+          pivot element from the array and partitioning the array into two subarrays such that elements less than the 
+          pivot are placed to its left, and elements greater than the pivot are placed to its right. The process is 
+          then recursively applied to the subarrays until the entire array is sorted.
+        </p>
+      <h2>Operation of Quick Sort:</h2><p>
+        <li>Partitioning: Select a pivot element from the array and partition the array into two subarrays such that elements less than the pivot are placed to its left, and elements greater than the pivot are placed to its right.</li>
+        <li>Recursion: Recursively apply quick sort to the subarrays created in the previous step until the entire array is sorted.</li></p>
+      <h2>Application of Quick Sort:</h2><p>
+        <li>Sorting: Quick sort is widely used for sorting large datasets efficiently due to its average-case time complexity of O(n log n).</li>
+        <li>In-place Sorting: It's suitable for scenarios where additional memory space is limited, as it can be implemented to sort the array in place without requiring additional memory.</li></p>
+      <h2>Advantage of Quick Sort:</h2><p>
+        <li>Efficiency: Quick sort has an average-case time complexity of O(n log n), making it one of the fastest sorting algorithms for large datasets.</li>
+        <li>In-place Sorting: Quick sort can be implemented to sort the array in place without requiring additional memory space, making it memory efficient.</li></p>
+      <h2>Disadvantage of Quick Sort:</h2><p>
+        <li>Worst-case Performance: In the worst-case scenario, quick sort's time complexity can degrade to O(n^2), which occurs when the pivot selection results in unbalanced partitions. However, this can be mitigated by using randomized pivot selection or other optimization techniques.</li>
+        <li>Not Stable: Quick sort is not a stable sorting algorithm, meaning it may change the relative order of equal elements in the input array.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start
+    function displayArray(array) {
+    const arrayContainer = document.getElementById('arrayContainer');
+    arrayContainer.innerHTML = '';
+    array.forEach((num) => {
+      const div = document.createElement('div');
+      div.classList.add('array-box');
+      div.textContent = num;
+      arrayContainer.appendChild(div);
+    });
+  }
+
+  // Function to display quick sort steps
+  function displayQuickSortStep(step) {
+    const stepsContainer = document.getElementById('stepsContainer');
+    const div = document.createElement('div');
+    div.classList.add('quick-sort-step');
+    div.textContent = step;
+    stepsContainer.appendChild(div);
+  }
+
+  // Quick sort algorithm
+  function quickSort(array) {
+    if (array.length <= 1) {
+      return array;
+    }
+
+    const pivot = array[0];
+    const left = [];
+    const right = [];
+
+    for (let i = 1; i < array.length; i++) {
+      if (array[i] < pivot) {
+        left.push(array[i]);
+      } else {
+        right.push(array[i]);
+      }
+    }
+
+    displayQuickSortStep(`Pivot: ${pivot}, Left: [${left}], Right: [${right}]`);
+
+    return [...quickSort(left), pivot, ...quickSort(right)];
+  }
+
+  // Function to start sorting
+  function startSorting() {
+    const inputArray = document.getElementById('inputArray').value.trim();
+    const values = inputArray.split(',').map(Number);
+    if (values.length > 0) {
+      const sortedArray = quickSort(values);
+      displayArray(sortedArray);
+    }
+  }
+   //animation end 
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,397 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set & Maps</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+
+    .operation {
+        margin-bottom: 10px;
+    }
+
+    .button {
+        padding: 10px 16px;
+        background-color: #0492C2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .button:hover {
+        background-color: #82EEFD;
+        color: black;
+    }
+    .set-map-container {
+        border: 1px solid black;
+        padding: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 5px;
+    }
+    #elementInput, #deleteInput{
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 5px;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  /* For screens larger than or equal to 1024px */
+  @media (min-width: 1024px) {
+    .code-container {
+      width: 80%;
+    }
+    .explaination {
+      padding-left: 150px;
+      padding-right: 150px;
+    }
+  }
+  
+  /* For screens between 768px and 1023px */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .code-container {
+      width: 90%;
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens between 480px and 767px */
+  @media (min-width: 480px) and (max-width: 767px) {
+    .container{
+      margin: 5px 20px;
+    }
+    .code-container {
+      width: 95%;
+  
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens smaller than 480px */
+  @media (max-width: 479px) {
+    .container{
+      margin: 5px 10px;
+    }
+    .code-container {
+      width: 100%;
+      padding: 10px;
+    }
+    .explaination {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+</style>
+</head>
+<body>
+  <br>
+  <br>
+  <br>
+    <div class="container">
+        <h2>Set and Map Operations</h2>
+    
+        <div class="operation">
+            <button class="button" onclick="insertElement()">Insert Element</button>
+            <input type="text" id="elementInput" placeholder="Enter element to insert">
+        </div>
+    
+        <div class="operation">
+            <button class="button" onclick="deleteElement()">Delete Element</button>
+            <input type="text" id="deleteInput" placeholder="Enter element to delete">
+        </div>
+    
+        <div class="set-map-container">
+            <h3>Set</h3>
+            <ul id="setList"></ul>
+    
+            <h3>Map</h3>
+            <ul id="mapList"></ul>
+        </div>
+    </div>
+    
+    <div class="explaination">
+      <h2>What is Set and Map:</h2><p>
+          Set: A set is a collection of unique elements where each element occurs only once. Sets are typically
+             used to store distinct values and provide operations for testing membership and performing set 
+             operations like union, intersection, and difference.<br><br>
+          Map: A map (also known as dictionary or associative array) is a collection of key-value pairs where 
+            each key is associated with a value. Maps allow efficient retrieval of values based on their keys and 
+            support operations like insertion, deletion, and lookup.</p>
+      <h2>Types of Set and Map:</h2><p>
+        Set: There are various types of sets, including:
+        <li>HashSet: A set implemented using a hash table for fast insertion, deletion, and lookup operations.</li>
+        <li>TreeSet: A set implemented using a balanced binary search tree for maintaining elements in sorted order.</li><br>
+        Map: Similarly, there are different types of maps, such as:<br><br>
+        <li>HashMap: A map implemented using a hash table for fast key-value pair insertion, deletion, and lookup.</li>
+        <li>TreeMap: A map implemented using a balanced binary search tree for maintaining key-value pairs in sorted order.</li></p>
+      <h2>Operation of Set and Map:</h2><p>
+        Set: Common operations on sets include:<br>
+        <li>Insertion: Adding elements to the set.
+        <li>Deletion: Removing elements from the set.
+        <li>Membership Test: Checking if an element is present in the set.
+        <li>Set Operations: Performing set operations like union, intersection, and difference.<br><br>
+        Map: Common operations on maps include:<br><br>
+        <li>Insertion: Adding key-value pairs to the map.
+        <li>Deletion: Removing key-value pairs from the map.
+        <li>Lookup: Retrieving the value associated with a given key.
+        <li>Traversal: Iterating over key-value pairs in the map.<p>
+      <h2>Application of Set and Map</h2><p>
+        Set: Sets are used in various applications, including:<br>
+        <li>Removing duplicates from a list.</li>
+        <li>Checking for the existence of unique elements in a collection.</li>
+        <li>Implementing mathematical operations like set intersection and difference.</li><br>
+        Map: Maps are widely used in applications such as:<br><br>
+        <li>Storing configuration settings in software applications.</li>
+        <li>Implementing symbol tables in compilers and interpreters.</li>
+        <li>Storing data in key-value pairs for efficient retrieval.</li></p>
+      <h2>Advantage of Set and Map:</h2><p>
+        <li>Efficient Retrieval: Both sets and maps offer efficient retrieval of elements/values based on their keys.</li>
+        <li>Unique Elements: Sets ensure that each element occurs only once, maintaining uniqueness.</li>
+        <li>Flexibility: Maps provide flexibility in associating arbitrary keys with values, allowing for diverse data storage and retrieval.</li></p>
+      <h2>Disadvantage of Set and Map:</h2><p>
+        <li>Memory Overhead: Both sets and maps may have a higher memory overhead compared to simple arrays or lists due to internal data structures used for efficient operations.</li>
+        <li>Complexity: Some operations on sets and maps may have higher time complexity compared to simpler data structures, especially when dealing with large datasets or complex keys/values.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{dataset.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{dataset.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{dataset.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+  //animation start
+  
+  let set = new Set();
+  let map = new Map();
+
+  function updateLists() {
+      const setList = document.getElementById('setList');
+      const mapList = document.getElementById('mapList');
+
+      setList.innerHTML = '';
+      mapList.innerHTML = '';
+
+      set.forEach(element => {
+          const li = document.createElement('li');
+          li.textContent = element;
+          setList.appendChild(li);
+      });
+
+      map.forEach((value, key) => {
+          const li = document.createElement('li');
+          li.textContent = `${key} - ${value}`;
+          mapList.appendChild(li);
+      });
+  }
+
+  function insertElement() {
+      const element = document.getElementById('elementInput').value;
+      set.add(element);
+      map.set(element, element);
+      updateLists();
+  }
+
+  function deleteElement() {
+      const element = document.getElementById('deleteInput').value;
+      set.delete(element);
+      map.delete(element);
+      updateLists();
+  }
+  //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

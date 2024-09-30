@@ -1,0 +1,376 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insertion Sort</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation{
+        justify-content: center;
+        text-align: center;
+    }
+    #container {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        margin-top: 50px;
+        
+      }
+      
+    .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 5px;
+        font-size: 18px;
+        color: white;
+    }
+      
+    .normal {
+        background-color: #003366;
+    }
+      
+    .checking {
+        background-color: #0492C2;
+    }
+      
+    .key {
+        background-color: #82EEFD;
+    }
+    .button{
+        margin-top: 20px;
+        font-size: 17px;
+        background-color: #0492c2;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .button:hover{
+      background-color: #82EEFD;
+      color: black;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="animation">
+  <div id="container"></div>
+  <button onclick="startSorting()" class="button">Start Sorting</button>
+</div>
+    <div class="explaination">
+      <h2>What is Insertion Sort:</h2>
+        <p>Insertion sort is a simple comparison-based sorting algorithm that builds the final sorted array one 
+          element at a time by repeatedly inserting the next element into its correct position in the already sorted part of the array.
+        </p>
+      <h2>Operation of Insertion Sort:</h2><p>
+        <li>Insertion: Iterate through the array, starting from the second element.</li>
+        <li>Comparison: Compare the current element with the elements to its left in the sorted portion of the array.</li>
+        <li>Shift: Move larger elements one position to the right to make space for the current element.</li>
+        <li>Insert: Insert the current element into its correct position in the sorted portion of the array.</li></p>
+      <h2>Application of Insertion Sort:</h2><p>
+        <li>Small Data Sets: Insertion sort is efficient for sorting small datasets or nearly sorted arrays due to its simplicity and low overhead.</li>
+        <li>Online Algorithms: It's useful in scenarios where elements are streamed continuously, and sorting needs to be done on-the-fly.</li></p>
+      <h2>Advantage of Insertion Sort:</h2><p>
+        <li>Efficiency for Small Data Sets: Insertion sort is efficient for sorting small datasets or arrays with few elements, as it has a time complexity of O(n^2) in the worst-case scenario, but performs better for small n.</li>
+        <li>Adaptive: Insertion sort is adaptive, meaning it performs well on nearly sorted arrays, as it requires fewer comparisons and shifts in such cases.</li></p>
+      <h2>Disadvantage of Insertion Sort:</h2><p>
+        <li>Inefficiency for Large Data Sets: Insertion sort's time complexity of O(n^2) makes it inefficient for sorting large datasets or arrays with many elements.</li>
+        <li>Not Suitable for Random Access Memory: Insertion sort's frequent shifting of elements makes it less suitable for scenarios where random access memory is expensive or slow, as it can lead to high overhead.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}    
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+      {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+      {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+    //animation start
+    
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+      
+      async function insertionSort(arr) {
+        let n = arr.length;
+        for (let i = 1; i < n; i++) {
+          // Pick the key element at current index
+          let key = arr[i];
+          // Move elements of arr[0..i-1], that are greater than key, to one position ahead
+          // of their current position
+          let j = i - 1;
+          while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            updateDisplay(arr, j + 1, arr[j]);
+            await sleep(500); // Adjust the speed of animation (milliseconds)
+            j--;
+          }
+          // Insert the key element at its correct position in sorted array
+          arr[j + 1] = key;
+          updateDisplay(arr, j + 1, key, true);
+          await sleep(500); // Adjust the speed of animation (milliseconds)
+        }
+      }
+      
+      function createCircle(value) {
+        let circle = document.createElement('div');
+        circle.classList.add('circle');
+        circle.classList.add('normal');
+        circle.textContent = value;
+        return circle;
+      }
+      
+      function updateDisplay(arr, index, value, isKey = false) {
+        let container = document.getElementById('container');
+        container.innerHTML = '';
+        arr.forEach((val, idx) => {
+          let circle = createCircle(val);
+          if (idx === index) {
+            if (isKey) {
+              circle.classList.add('key');
+            } else {
+              circle.classList.add('checking');
+            }
+          }
+          container.appendChild(circle);
+        });
+      }
+      
+      function startSorting() {
+        // Initial array to sort
+        let array = [5, 3, 8, 4, 2, 1, 6, 9, 7];
+        insertionSort(array);
+      }
+    //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

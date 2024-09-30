@@ -1,0 +1,346 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge Sort</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 35vh;
+        margin: 0;
+    }
+    
+    #circles-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        padding: 20px; /* Prevents wrapping */
+    }
+    
+    .circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #0492C2;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 10px;
+    }
+    
+    .button {
+        margin-top: 20px;
+        margin-bottom: 10px; /* Added margin bottom to create space */
+        padding: 10px 20px;
+        background-color: #0492C2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .button:hover {
+        background-color: #82EEFD;
+        color: black;
+    }
+    
+    input {
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid black;
+        width: 40vh;
+        font-size: 17px;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+      
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+    
+<div class="animation">
+    <input type="text" id="inputValues" placeholder="Enter numbers separated by commas">
+    <div id="circles-container"></div>
+    <button onclick="startSorting()" class="button">Start Sorting</button>
+</div>
+    <div class="explaination">
+      <h2>What is Merge Sort:</h2>
+        <p>Merge sort is a comparison-based sorting algorithm that follows the divide-and-conquer strategy. 
+          It recursively divides the input array into smaller subarrays until each subarray contains only one 
+          element. Then, it merges the subarrays back together in sorted order.
+        </p>
+      <h2>Operations on Merge Sort:</h2><p>
+        <li>Divide: Divide the input array into two halves.</li>
+        <li>Conquer: Recursively apply merge sort to each half, dividing them further until each subarray contains only one element.</li>
+        <li>Merge: Merge the sorted subarrays back together by comparing elements and arranging them in sorted order.</li></p>
+      <h2>Application on Merge Sort:</h2><p>
+        <li>Sorting: Merge sort is widely used for sorting large datasets efficiently.</li>
+        <li>External Sorting: It's used for sorting large datasets that don't fit into memory by performing external sorting, where chunks of data are sorted in memory and then merged.</li></p>
+      <h2>Advantage on Merge Sort:</h2><p>
+        <li>Efficiency: Merge sort has a time complexity of O(n log n), making it efficient for sorting large datasets.</li>
+        <li>Stable Sorting: Merge sort is stable, meaning it preserves the relative order of equal elements, making it suitable for applications where maintaining the order of equal elements is important.</li></p>
+      <h2>Disadvantage on Merge Sort:</h2><p>
+        <li>Space Complexity: Merge sort requires additional memory space to store the merged subarrays during the merging phase, which can be a drawback for sorting large datasets.</li>
+        <li>Not In-place: Merge sort is not an in-place sorting algorithm, meaning it requires additional memory space proportional to the size of the input array for storing temporary subarrays during the sorting process.</li>
+      </p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+      {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+      {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+      {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start
+   
+   const delay = ms => new Promise(res => setTimeout(res, ms));
+
+   async function mergeSort(arr) {
+       if (arr.length <= 1) return arr;
+       
+       const mid = Math.floor(arr.length / 2);
+       const left = await mergeSort(arr.slice(0, mid));
+       const right = await mergeSort(arr.slice(mid));
+       
+       return await merge(left, right);
+   }
+
+   async function merge(left, right) {
+       let result = [];
+       let leftIndex = 0;
+       let rightIndex = 0;
+
+       while (leftIndex < left.length && rightIndex < right.length) {
+           if (left[leftIndex] < right[rightIndex]) {
+               result.push(left[leftIndex]);
+               leftIndex++;
+           } else {
+               result.push(right[rightIndex]);
+               rightIndex++;
+           }
+           
+           circlesContainer.innerHTML = result.map(value => `<div class="circle">${value}</div>`).join('');
+           await delay(1000);
+       }
+
+       return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+   }
+
+   const circlesContainer = document.getElementById('circles-container');
+
+   async function startSorting() {
+       const inputValues = document.getElementById('inputValues').value.trim();
+       const values = inputValues.split(',').map(Number);
+       const sortedValues = await mergeSort(values);
+       circlesContainer.innerHTML = sortedValues.map(value => `<div class="circle">${value}</div>`).join('');
+   }
+   //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

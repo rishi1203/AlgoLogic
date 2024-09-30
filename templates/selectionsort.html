@@ -1,0 +1,341 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selection Sort</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    .animation{
+        text-align: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 17px;
+    }
+    #container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      #inputNumbers{
+        margin: 10px 0px;
+        width: 35vh;
+        padding: 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+      }
+      .button{
+        width: 10vh;
+        font-size: 17px;
+        background-color: #0492C2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+      }
+      .button:hover{
+        background-color: #82EEFD;
+        color: black;
+      }
+      .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #0492C2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 5px;
+        font-size: 18px;
+        color: white;
+      }
+      .explaination{
+        padding-left: 140px;
+        padding-right: 120px;
+        padding-bottom: 10px;
+      }
+      .explaination p,li{
+        font-size: 17px;
+      }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  /* For screens larger than or equal to 1024px */
+  @media (min-width: 1024px) {
+    .code-container {
+      width: 80%;
+    }
+    .explaination {
+      padding-left: 150px;
+      padding-right: 150px;
+    }
+  }
+  
+  /* For screens between 768px and 1023px */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .code-container {
+      width: 90%;
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens between 480px and 767px */
+  @media (min-width: 480px) and (max-width: 767px) {
+    .code-container {
+      width: 95%;
+  
+    }
+    .explaination {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  /* For screens smaller than 480px */
+  @media (max-width: 479px) {
+    .code-container {
+      width: 100%;
+      padding: 10px;
+    }
+    .explaination {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+</style>
+</head>
+<body>
+  <div class="animation">
+    <label for="inputNumbers" class="input">Enter numbers separated by commas:</label><br>
+    <input type="text" id="inputNumbers"><br>
+    <button onclick="sortNumbers()" class="button">Sort</button>
+  <div id="container"></div>
+</div>
+    <div class="explaination">
+      <h2>What is Selection Sort:</h2>
+        <p>Selection sort is a comparison-based sorting algorithm that divides the input array into two parts: a 
+          sorted subarray and an unsorted subarray. It repeatedly selects the smallest (or largest) element from 
+          the unsorted subarray and swaps it with the first element of the unsorted subarray, effectively expanding the sorted subarray.
+        </p>
+      <h2>Operation of Selection Sort:</h2><p>
+        <li>Selection: Iterate through the unsorted subarray to find the smallest (or largest) element.</li>
+        <li>Swap: Swap the found smallest (or largest) element with the first element of the unsorted subarray.</li>
+        <li>Expansion: Expand the sorted subarray by moving its boundary one element to the right, effectively reducing the size of the unsorted subarray.</li></p>
+      <h2>Application of Selection Sort:</h2><p>
+        <li>Small Data Sets: Selection sort is efficient for sorting small datasets or arrays with few elements due to its simplicity and low overhead.</li>
+        <li>Teaching Purposes: It's often used in educational settings to teach sorting algorithms due to its simplicity and ease of understanding.</li></p>
+      <h2>Advantage of Selection Sort:</h2><p>
+        <li>Simple Implementation: Selection sort has a simple implementation and is easy to understand, making it suitable for educational purposes and scenarios where simplicity is preferred.</li>
+        <li>In-place Sorting: Selection sort sorts the array in place without requiring additional memory space, making it memory efficient.</li></p>
+      <h2>Disadvantage of Selection Sort:</h2><p>
+        <li>Inefficiency for Large Data Sets: Selection sort has a time complexity of O(n^2), making it inefficient for sorting large datasets or arrays with many elements.</li>
+        <li>Inefficiency for Sorted Arrays: Selection sort does not adapt well to partially sorted arrays, as it always finds the smallest (or largest) element in the unsorted subarray, even if the array is already partially sorted. This results in unnecessary comparisons and swaps.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start 
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  async function selectionSort(arr) {
+    let n = arr.length;
+    for (let i = 0; i < n - 1; i++) {
+      let minIndex = i;
+      for (let j = i + 1; j < n; j++) {
+        if (arr[j] < arr[minIndex]) {
+          minIndex = j;
+        }
+      }
+      if (minIndex !== i) {
+        let temp = arr[i];
+        arr[i] = arr[minIndex];
+        arr[minIndex] = temp;
+        updateDisplay(arr);
+        await sleep(1000); // Adjust the speed of animation (milliseconds)
+      }
+    }
+  }
+  
+  function createCircle(value) {
+    let circle = document.createElement('div');
+    circle.classList.add('circle');
+    circle.textContent = value;
+    return circle;
+  }
+  
+  function updateDisplay(arr) {
+    let container = document.getElementById('container');
+    container.innerHTML = '';
+    arr.forEach(value => {
+      let circle = createCircle(value);
+      container.appendChild(circle);
+    });
+  }
+  
+  function sortNumbers() {
+    let inputElement = document.getElementById('inputNumbers');
+    let inputText = inputElement.value.trim();
+    let numbers = inputText.split(',').map(num => parseInt(num.trim()));
+    if (numbers.every(num => !isNaN(num))) {
+      selectionSort(numbers);
+    } else {
+      alert('Please enter valid numbers separated by commas.');
+    }
+  }
+   //animation end
+  // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

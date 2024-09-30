@@ -1,0 +1,339 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Euclidean Algorithm</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    
+    .animation {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40vh;
+        margin: 0;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    input[type="number"] {
+        padding: 8px;
+        width: 20vh;
+        margin-bottom: 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    .button {
+        padding: 10px 20px;
+        background-color: #0492C2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #82EEFD;
+        color: black;
+    }
+
+    #explanation {
+        margin-top: 20px;
+    }
+
+    .step {
+        margin-bottom: 10px;
+    }
+
+    .step span {
+        font-weight: bold;
+        color: blue;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>
+</head>
+<body>
+    <br>
+    <br>
+    <br>
+<div class="animation">
+    <div class="container">
+        <h2>Euclidean Algorithm (GCD) Animation</h2>
+        <input type="number" id="number1Input" placeholder="Enter first number">
+        <input type="number" id="number2Input" placeholder="Enter second number">
+        <button onclick="calculateGCD()" class="button">Calculate GCD</button>
+        <div id="explanation"></div>
+    </div>
+</div>
+    <div class="explaination">
+      <h2>What is Euclidean:</h2>
+        <p>The Euclidean algorithm is an efficient method for finding the greatest common divisor (GCD) of two 
+          integers. It's based on the principle that the GCD of two numbers remains the same if the larger number 
+          is replaced by its difference with the smaller number.
+        </p>
+      <h2>Operation of Euclidean:</h2><p>
+        <li>Initialization: Start with two positive integers, a and b, where a is greater than or equal to b.</li>
+        <li>Division: Divide a by b and compute the remainder r.</li>
+        <li>Update: Replace a with b and b with r.</li>
+        <li>Repeat: Repeat steps 2-3 until the remainder r is zero. The GCD is the value of b when r becomes zero.</li></p>
+      <h2>Application of Euclidean:</h2><p>
+        <li>Finding Coprime Numbers: The Euclidean algorithm can determine whether two numbers are coprime by checking if their GCD is 1.</li>
+        <li>Modular Arithmetic: It's used in modular arithmetic to find the modular multiplicative inverse.</li></p>  
+      <h2>Advantages of Euclidean:</h2><p>
+        <li>Efficiency: The Euclidean algorithm is very efficient and has a time complexity of O(log min(a, b)), where a and b are the two integers.</li>
+        <li>Simplicity: It's straightforward to implement and understand, making it widely used in various applications involving integer arithmetic.</li></p>
+      <h2>Disadvantages of Euclidean:</h2><p>
+        <li>Limited to Integers: The Euclidean algorithm is specifically designed for finding the GCD of integers and cannot be directly applied to other types of numbers, such as real numbers or complex numbers.</li>
+        <li>Potential for Large Numbers: While the algorithm is efficient for most cases, it may become less efficient for extremely large numbers due to the repeated division operations. In such cases, more advanced algorithms may be required.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+    {{algorithm.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+    {{algorithm.python_code}}
+</textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+    {{algorithm.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+    //animation start
+    
+    function calculateGCD() {
+        const number1 = parseInt(document.getElementById('number1Input').value);
+        const number2 = parseInt(document.getElementById('number2Input').value);
+
+        if (isNaN(number1) || isNaN(number2)) {
+            alert('Please enter valid numbers.');
+            return;
+        }
+
+        const explanationElement = document.getElementById('explanation');
+        explanationElement.innerHTML = '';
+
+        let a = Math.abs(number1);
+        let b = Math.abs(number2);
+
+        while (b !== 0) {
+            const quotient = Math.floor(a / b);
+            const remainder = a % b;
+
+            const stepExplanation = document.createElement('div');
+            stepExplanation.classList.add('step');
+            stepExplanation.innerHTML = `<span>${a}</span> = ${quotient} × <span>${b}</span> + ${remainder}`;
+            explanationElement.appendChild(stepExplanation);
+
+            a = b;
+            b = remainder;
+        }
+
+        const gcd = a;
+        const gcdExplanation = document.createElement('div');
+        gcdExplanation.classList.add('step');
+        gcdExplanation.textContent = `GCD(${number1}, ${number2}) = ${gcd}`;
+        explanationElement.appendChild(gcdExplanation);
+    }
+    //animation end
+    // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}

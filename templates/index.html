@@ -1,0 +1,206 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!--Header section end-->
+<!--main section start-->
+<div class="main">
+<div class="contain">
+    <section class="main-section">
+        <div class="main-content">
+          <h1>DSA Playground</h1>
+          <p>The DSA website offers a comprehensive learning experience through live animations, detailed explanations, and code
+              implementations in Python, Java, and C++. It further enriches learning with a 15-question test spanning multiple 
+              languages, facilitating assessment and skill improvement. Additionally, a chatbot provides personalized assistance, 
+              enhancing understanding and guiding learners through their DSA journey. Through these features, the website aims to 
+              cultivate a deeper understanding of data structures and algorithms, catering to learners of all levels and preferences.</p>
+        </div>
+        <div class="main-img">
+            <img src="{% static './img/img12.png' %}" alt="">
+        </div>
+    </section>
+</div>
+</div>
+<!--main section end-->
+<!--Feature section start-->
+<h2 class="heading">Features</h2>
+<div class="card-container">
+    <div class="card">
+        <img src="{% static './img/img1.png' %}" alt="">
+        <div class="card-content">
+            <h1>Live Animation</h1>
+            <p>Experience DSA concepts come alive with dynamic, real-time animations. Dive into interactive learning journeys 
+            enriched with visually engaging demonstrations. Explore complex algorithms and data structures through immersive, 
+            live visualizations.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="{% static './img/img4.png' %}" alt="">
+        <div class="card-content">
+            <h1>Explaination</h1>
+            <p>Explore comprehensive explanations on various Data Structures and Algorithms concepts, facilitating clear understanding. 
+                Dive deep into each topic with concise yet informative explanations, simplifying complex concepts for easier comprehension.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="{% static './img/img5.png' %}" alt="">
+        <div class="card-content">
+            <h1>Test</h1>
+            <p>Test Your DSA Skills in Python, C++, and Java! Assess your proficiency with our comprehensive 15-question tests tailored 
+                for each language. Elevate your understanding and master DSA concepts across multiple programming languages.</p>
+        </div>
+    </div>
+</div>
+<div class="card-container">
+    <div class="card">
+        <img src="{% static './img/img6.png' %}" alt="">
+        <div class="card-content">
+            <h1>Code Support</h1>
+            <p>Explore DSA with comprehensive code support in Python, C++, and Java. Learn, practice, and implement algorithms 
+                seamlessly across languages for a versatile programming experience.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="{% static './img/img7.png' %}" alt="">
+        <div class="card-content">
+            <h1>Language Support</h1>
+            <p>DSA Website: Language Support in Python, C++, and Java - Empowering learners with comprehensive DSA resources across 
+                three major programming languages for versatile skill development.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="{% static './img/img8.png' %}" alt="">
+        <div class="card-content">
+            <h1>ChatBot</h1>
+            <p>Explore our intuitive DSA chatbot, your instant guide to mastering algorithms and data structures. 
+                Get quick answers, personalized tips, and real-time assistance tailored to your learning journey.</p>
+        </div>
+    </div>
+</div>
+<!--Feature section end-->
+<!-- <div class="gpt">
+    <button>
+        <a href="{% url 'gpt' %}">GPT</a>
+    </button>
+</div> -->
+<!--DSA section start-->
+<h2 class="heading">Data Structure</h2>
+<div class="dscontent">
+    <section class="dsa">
+        <div class="dsa-img">
+            <img src="{% static './img/img2.png' %}" alt="">
+        </div>
+        <div class="dsa-content">
+            <h1>Data Structure</h1>
+            <p>This website serves as a comprehensive resource for learning Data Structures and Algorithms (DSA). 
+                It emphasizes interactive learning through live animations, which visualize complex concepts, making 
+                them easier to understand. Detailed explanations accompany each topic, ensuring clarity and comprehension. 
+                Learners can practice their skills with coding exercises available in three languages: Python, Java, and C++. 
+                To assess their understanding, users can take a 15-question test designed to evaluate their knowledge. 
+                Additionally, the website features a chatbot, providing instant support and personalized guidance, making the 
+                learning journey efficient and enjoyable.</p>
+                <a href="{% url 'Dsa' %}" class="read-more">Read More</a>
+        </div>
+    </section>
+</div>
+<!--DSA section end-->
+
+<!--Algo section start-->
+<h2 class="heading">Algorithms</h2>
+<div class="al-main">
+<div class="dscontent">
+    <section class="algo">
+        <div class="algo-content">
+            <h1>Algo importance</h1>
+            <p>This title and description encapsulate the essence of the DSA website. "AlgoLogic" signifies a central 
+                place for all things related to Data Structures and Algorithms. The description highlights the interactive 
+                nature of the platform, offering live animations for visual learning, thorough explanations for understanding 
+                concepts, and code examples in three popular programming languages (Python, Java, and C++). The availability of 
+                a 15-question test adds an element of assessment to gauge one's understanding. Lastly, the inclusion of a chatbot 
+                ensures that users have access to instant support and personalized assistance throughout their learning journey.</p>
+            <a href="{% url 'algopg' %}" class="read-more">Read More</a>
+        </div>
+        <div class="algo-img">
+            <img src="{% static './img/img3.png' %}" alt="">
+        </div>
+    </section>
+</div>
+</div>
+<!--Algo section end-->
+
+<!--Language Support start-->
+<h2 class="heading">Language Support</h2>
+<div class="lang">
+<div class="language">
+    <div class="lang-img">
+        <img src="{% static './img/img9.png' %}">
+    </div>
+    <div class="lang-text">
+        <h1>Why Python?</h1>
+        <p>Python stands out as an exceptional choice for mastering Data Structures and Algorithms (DSA) due to its simplicity, 
+            versatility, and readability. Its clear syntax and extensive libraries empower learners to focus on algorithmic concepts 
+            rather than intricate language details. Python's dynamic nature facilitates rapid prototyping, experimentation, and debugging, 
+            accelerating the learning curve for DSA enthusiasts. Moreover, its widespread adoption in industry and academia ensures ample 
+            resources, community support, and real-world applications, making it the ideal language for DSA proficiency and beyond.</p>
+    </div>
+</div>
+<div class="language">
+    <div class="lang-img">
+        <img src="{% static './img/img10.png' %}">
+    </div>
+    <div class="lang-text">
+        <h1>Why Java?</h1>
+        <p>Java is a preferred language for Data Structures and Algorithms (DSA) due to its robustness, portability, and extensive ecosystem.
+         As a statically-typed language, Java offers strong type checking, which helps prevent errors and ensures code reliability, 
+         crucial for implementing complex algorithms.Java's platform independence allows DSA implementations to run 
+         seamlessly across various operating systems and devices, enhancing accessibility and versatility.
+         Moreover, Java's rich standard library provides built-in data structures and algorithms implementations, simplifying 
+         development and optimization efforts. This extensive library, combined with Java's object-oriented programming paradigm, 
+         fosters modularity and code reusability, facilitating the creation of scalable and maintainable DSA solutions.</p>
+    </div>
+</div>
+<div class="language">
+    <div class="lang-img">
+        <img src="{% static './img/img11.png' %}">
+    </div>
+    <div class="lang-text">
+        <h1>Why C++?</h1>
+        <p>This title and description underscore the significance of choosing C++ as the primary language for learning data structures and
+         algorithms (DSA). By advocating for C++, the website emphasizes its unique strengths, such as robustness and versatility, which 
+         are essential for tackling intricate algorithmic problems. The description further highlights C++'s capabilities in low-level 
+         memory management and high-performance computing, attributes crucial for mastering advanced DSA concepts. By providing tailored 
+         resources and support for C++ learners, the website ensures an enriched learning experience, empowering enthusiasts to delve 
+         deeper into the world of DSA with confidence and proficiency.</p>
+    </div>
+</div>
+</div>
+<!--Language Support end-->
+
+<!--Test Support start-->
+<h2 class="heading">Test</h2>
+<div class="test-main">
+<div class="dscontent">
+    <section class="algo">
+        <div class="algo-content">
+            <h1>Test</h1>
+            <p>The title and description emphasize the core feature of the DSA website: the comprehensive 15-question test spanning 
+                multiple languages. By offering support for Python, Java, and C++, the website caters to a diverse audience with varying 
+                language preferences and proficiency levels. The test is positioned as a tool for both learning and assessment, 
+                challenging users to apply their knowledge in different programming languages and reinforcing key DSA concepts. 
+                Additionally, the description highlights the inclusivity of the test, welcoming beginners and experts alike to evaluate 
+                their skills and grow in their understanding of data structures and algorithms.</p>
+            <a href="" class="read-more">Read More</a>
+        </div>
+        <div class="test-img">
+            <img src="{% static './img/img5.png' %}" alt="">
+        </div>
+    </section>
+</div>
+</div>
+<!--Test support end-->
+{% endblock %}
+
+

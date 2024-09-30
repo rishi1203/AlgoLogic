@@ -1,0 +1,353 @@
+{% extends 'header.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+
+<style>
+    /* CSS styles for the stack container and items */
+    .animation{
+        justify-content: center;
+        text-align: center;
+        padding-top: 10px;
+    }
+    .stack {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+    .stack-item {
+        width: 100px;
+        height: 40px;
+        background-color: hsl(var(--hue), 70%, 50%);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .button{
+        width: 15vh;
+        font-size: 17px;
+        border: none;
+        margin-right: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #0492C2;
+        color: white;
+    }
+    .button:hover{
+      background-color: #82EEFD;
+      color: black;
+    }
+    .explaination{
+      padding-left: 140px;
+      padding-right: 120px;
+      padding-bottom: 10px;
+    }
+    .explaination p,li{
+      font-size: 17px;
+    }
+  /* Style the code container */
+  .code-container {
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  /* Style the copy button */
+  .copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #050505;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  /* Style the icon */
+  .copy-icon {
+    font-size: 18px;
+  }
+
+  /* Style the copy message */
+  .copy-message {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    display: none;
+    color: #040609;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2s;
+  }
+
+  /* Animation for the copy message */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Adjust CodeMirror height */
+  .CodeMirror {
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* For screens larger than or equal to 1024px */
+@media (min-width: 1024px) {
+  .code-container {
+    width: 80%;
+  }
+  .explaination {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+/* For screens between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .code-container {
+    width: 90%;
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens between 480px and 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .button{
+    margin-bottom: 10px; 
+  }
+  .code-container {
+    width: 95%;
+
+  }
+  .explaination {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* For screens smaller than 480px */
+@media (max-width: 479px) {
+  .button{
+    margin-bottom: 10px; 
+  }
+  .code-container {
+    width: 100%;
+    padding: 10px;
+  }
+  .explaination {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>
+</head>
+<body>    
+  <br>
+  <br>
+  <br>
+<div class="animation">
+    <div class="stack">
+        <!-- Stack items will be dynamically added here -->
+    </div>
+    <button onclick="pushItem()" class="button">Push</button>
+    <button onclick="popItem()" class="button">Pop</button>
+    <button onclick="peekItem()" class="button">Peek</button>
+    <button onclick="checkIsEmpty()" class="button">isEmpty</button>
+    <button onclick="checkIsFull()" class="button">isFull</button>
+</div>
+    <div class="explaination">
+      <h2>What is Stack:</h2>
+        <p>A stack is a linear data structure that follows the Last In, First Out (LIFO) principle, where elements 
+          are added and removed from the same end called the top. It operates on the basis of two primary operations: 
+          push (adding an element to the top) and pop (removing the top element).
+        </p>
+      <h2>Types of Stack:</h2><p>
+        There are different types of stacks based on their implementation:
+        <li>Array-based Stack: Implemented using arrays where elements are stored in a contiguous block of memory.</li>
+        <li>Linked-list-based Stack: Implemented using linked lists where elements are stored in separate nodes, linked together by pointers.</li></p>
+      <h2>Operation of Stack:</h2><p>
+        <li>Push: Adds an element to the top of the stack.</li>
+        <li>Pop: Removes and returns the top element from the stack.</li>
+        <li>Peek (or Top): Returns the top element of the stack without removing it.</li>
+        <li>IsEmpty: Checks if the stack is empty.</li>
+        <li>IsFull (for array-based stack): Checks if the stack is full (applicable for fixed-size stacks).</li></p>
+      <h2>Application of Stack:</h2><p>
+        <li>Function Call Stack: Stacks are used by programming languages to manage function calls and local variables during program execution.</li>
+        <li>Expression Evaluation: Stacks are used in expression evaluation algorithms to handle parentheses and operators.</li>
+        <li>Backtracking Algorithms: Stacks are used in backtracking algorithms to store and track the state of search paths.</li>
+        <li>Undo Operations: Stacks are used in applications like text editors to implement undo functionality.</li></p>
+      <h2>Advantage of Stack:</h2><p>
+        <li>Simple Implementation: Stacks have a simple interface and are easy to implement.</li>
+        <li>Efficient Operations: Both push and pop operations have a time complexity of O(1), making them efficient for adding and removing elements.</li></p>
+      <h2>Disadvantage of Stack:</h2><p>
+        <li>Limited Access: Stacks provide limited access to elements, as only the top element can be accessed or removed at a time.</li>
+        <li>Memory Overhead: Depending on the implementation, stacks may have a higher memory overhead compared to other data structures, especially if using linked lists due to node overhead.</li></p>
+    </div>
+<div class="code-container">
+  <button class="copy-button" onclick="copyJavaCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="javaCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Java Code</h2>
+  <textarea id="javaEditor" class="language-java">
+      {{dataset.java_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyPythonCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="pythonCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>Python Code</h2>
+  <textarea id="pythonEditor" class="language-python">
+      {{dataset.python_code}}
+  </textarea>
+</div><br>
+
+<div class="code-container">
+  <button class="copy-button" onclick="copyCppCode()"><i class="far fa-copy copy-icon"></i></button>
+  <span class="copy-message" id="cppCopyMessage">Code copied <i class="fas fa-check"></i></span>
+  <h2>C++ Code</h2>
+  <textarea id="cppEditor" class="language-cpp">
+      {{dataset.cpp_code}}
+  </textarea>
+</div>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+
+<script>
+   //animation start
+   const stack = [];
+   const stackContainer = document.querySelector('.stack');
+   let hue = 0;
+
+   function pushItem() {
+       const newItem = document.createElement('div');
+       newItem.classList.add('stack-item');
+       newItem.textContent = stack.length + 1;
+       newItem.style.setProperty('--hue', hue);
+       stack.push(newItem);
+       stackContainer.appendChild(newItem);
+       hue = (hue + 30) % 360; // Rotate through hues
+   }
+
+   function popItem() {
+       const removedItem = stack.pop();
+       if (removedItem) {
+           stackContainer.removeChild(removedItem);
+       }
+   }
+
+   function peekItem() {
+       const topItem = stack[stack.length - 1];
+       if (topItem) {
+           alert(`Top item: ${topItem.textContent}`);
+       } else {
+           alert('Stack is empty.');
+       }
+   }
+
+   function checkIsEmpty() {
+       if (stack.length === 0) {
+           alert('Stack is empty.');
+       } else {
+           alert('Stack is not empty.');
+       }
+   }
+
+   function checkIsFull() {
+       // Assuming a fixed-size stack (adjust as needed)
+       const maxSize = 5;
+       if (stack.length === maxSize) {
+           alert('Stack is full.');
+       } else {
+           alert('Stack is not full.');
+       }
+   }
+   //animation end
+   // Initialize CodeMirror instances
+  const javaEditor = CodeMirror.fromTextArea(document.getElementById('javaEditor'), {
+    mode: 'text/x-java',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const pythonEditor = CodeMirror.fromTextArea(document.getElementById('pythonEditor'), {
+    mode: 'python',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  const cppEditor = CodeMirror.fromTextArea(document.getElementById('cppEditor'), {
+    mode: 'text/x-c++src',
+    theme: 'dracula',
+    lineNumbers: true,
+    readOnly: true
+  });
+
+  // Copy code to clipboard function
+  function copyCodeToClipboard(code, messageId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const message = document.getElementById(messageId);
+      message.style.display = 'inline-block';
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 2000); // Hide the message after 2 seconds
+    });
+  }
+
+  // Copy Java code
+  function copyJavaCode() {
+    const javaCode = javaEditor.getValue();
+    copyCodeToClipboard(javaCode, 'javaCopyMessage');
+  }
+
+  // Copy Python code
+  function copyPythonCode() {
+    const pythonCode = pythonEditor.getValue();
+    copyCodeToClipboard(pythonCode, 'pythonCopyMessage');
+  }
+
+  // Copy C++ code
+  function copyCppCode() {
+    const cppCode = cppEditor.getValue();
+    copyCodeToClipboard(cppCode, 'cppCopyMessage');
+  }
+</script>
+{% endblock %}
